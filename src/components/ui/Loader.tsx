@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 
 export function LoaderIcon({ size = 20 }: { size?: number }) {
