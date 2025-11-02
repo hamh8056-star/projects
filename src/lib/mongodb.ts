@@ -1,14 +1,15 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI as string;
+// Support à la fois MONGO_URL (Railway) et MONGODB_URI (Atlas/autre)
+const uri = (process.env.MONGO_URL || process.env.MONGODB_URI) as string;
 const options = {};
 
 let client;
 let clientPromise: Promise<MongoClient>;
 
-// Vérifier que MONGODB_URI est configuré
-if (!process.env.MONGODB_URI) {
-  throw new Error("MONGODB_URI is not configured. Please add MONGODB_URI to your .env.local file");
+// Vérifier qu'une URI MongoDB est configurée
+if (!uri) {
+  throw new Error("MongoDB URI is not configured. Please add MONGO_URL or MONGODB_URI to your environment variables");
 }
 
 // Configuration MongoDB pour tous les environnements
