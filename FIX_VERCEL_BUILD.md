@@ -1,10 +1,18 @@
 # 🔧 Fix pour les Erreurs de Build Vercel
 
-## Problème
+## Problèmes
+
+### Problème 1 : Module not found
 ```
 Module not found: Can't resolve '@/components/ui/select'
 Module not found: Can't resolve '@/components/ui/card'
 Module not found: Can't resolve '@/components/ui/Loader'
+```
+
+### Problème 2 : PostCSS Configuration Error
+```
+Error: A PostCSS Plugin was passed as an array but did not provide its configuration ('@tailwindcss/postcss').
+Error: Malformed PostCSS Configuration
 ```
 
 ## Solution
@@ -76,7 +84,23 @@ Assurez-vous que `tsconfig.json` contient :
 }
 ```
 
-### 6. Build local de test
+### 6. Corriger la configuration PostCSS
+
+Si vous voyez une erreur PostCSS, assurez-vous que `postcss.config.mjs` contient :
+
+```javascript
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+```
+
+⚠️ **Important** : Pour Tailwind CSS v4, la syntaxe correcte est un objet avec `{}`, pas un array ou une string.
+
+### 7. Build local de test
 
 Testez le build localement avant de déployer :
 ```bash
