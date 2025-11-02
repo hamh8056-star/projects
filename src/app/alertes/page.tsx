@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Download, Bell, AlertTriangle, Info, CheckCircle, AlertCircle, Search, Trash2, RotateCcw } from "lucide-react";
 import useSWR from "swr";
 import React from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 
 interface Alerte {
   _id: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui";
 import { RefreshCw, Wifi, Zap, Settings, AlertTriangle, CheckCircle, Plus, X, Monitor, Smartphone } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { QRCodeCanvas } from 'qrcode.react';

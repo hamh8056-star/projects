@@ -19,7 +19,7 @@ import {
   Database,
   Shield
 } from "lucide-react";
-import Loader, { LoaderIcon } from "@/components/ui/Loader";
+import { Loader, LoaderIcon } from "@/components/ui";
 import { useSidebar } from "@/components/contexts/SidebarContext";
 
 export default function Sidebar() {

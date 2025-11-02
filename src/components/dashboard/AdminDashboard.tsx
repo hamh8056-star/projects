@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui";
 import useSWR, { mutate } from "swr";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect, useRef } from "react";
