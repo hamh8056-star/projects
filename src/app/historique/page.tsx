@@ -426,20 +426,20 @@ export default function Historique() {
             {/* Période */}
             <div className="w-full sm:w-[160px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">Période</label>
-              <Select value={periode} onValueChange={setPeriode}>
+            <Select value={periode} onValueChange={setPeriode}>
                 <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tout">Tout</SelectItem>
-                  <SelectItem value="jour">Dernières 24h</SelectItem>
-                  <SelectItem value="semaine">Dernière semaine</SelectItem>
-                  <SelectItem value="mois">Dernier mois</SelectItem>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tout">Tout</SelectItem>
+                <SelectItem value="jour">Dernières 24h</SelectItem>
+                <SelectItem value="semaine">Dernière semaine</SelectItem>
+                <SelectItem value="mois">Dernier mois</SelectItem>
                   <SelectItem value="personnalise">Personnalisée</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
+              </SelectContent>
+            </Select>
+          </div>
+          
             {/* Date personnalisée */}
             {periode === "personnalise" && (
               <>
@@ -467,35 +467,35 @@ export default function Historique() {
             {/* Bassin */}
             <div className="w-full sm:w-[160px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">Bassin</label>
-              <Select value={bassin} onValueChange={setBassin}>
+            <Select value={bassin} onValueChange={setBassin}>
                 <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tout">Tous</SelectItem>
-                  {bassins.map((b: any) => (
-                    <SelectItem key={b._id} value={b._id}>{b.nom || b.name || b._id}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tout">Tous</SelectItem>
+                {bassins.map((b: any) => (
+                  <SelectItem key={b._id} value={b._id}>{b.nom || b.name || b._id}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
             
             {/* Paramètre */}
             <div className="w-full sm:w-[180px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">Paramètre</label>
-              <Select value={parametre} onValueChange={setParametre}>
+            <Select value={parametre} onValueChange={setParametre}>
                 <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="tout">Tous</SelectItem>
-                  <SelectItem value="Temperature">Temperature</SelectItem>
-                  <SelectItem value="pH">pH</SelectItem>
-                  <SelectItem value="Oxygen">Oxygen</SelectItem>
-                  <SelectItem value="Salinity">Salinity</SelectItem>
-                  <SelectItem value="Turbidity">Turbidity</SelectItem>
-                </SelectContent>
-              </Select>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="tout">Tous</SelectItem>
+                <SelectItem value="Temperature">Temperature</SelectItem>
+                <SelectItem value="pH">pH</SelectItem>
+                <SelectItem value="Oxygen">Oxygen</SelectItem>
+                <SelectItem value="Salinity">Salinity</SelectItem>
+                <SelectItem value="Turbidity">Turbidity</SelectItem>
+              </SelectContent>
+            </Select>
             </div>
             
             {/* Bouton Réinitialiser */}
@@ -542,19 +542,19 @@ export default function Historique() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="bg-slate-100">
-                  <th className="p-2 text-left">Date</th>
-                  <th className="p-2 text-left">Bassin</th>
-                  <th className="p-2 text-left">Temperature</th>
-                  <th className="p-2 text-left">pH</th>
-                  <th className="p-2 text-left">Oxygen</th>
-                  <th className="p-2 text-left">Salinity</th>
-                  <th className="p-2 text-left">Turbidity</th>
-                </tr>
-              </thead>
-              <tbody>
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="p-2 text-left">Date</th>
+                <th className="p-2 text-left">Bassin</th>
+                <th className="p-2 text-left">Temperature</th>
+                <th className="p-2 text-left">pH</th>
+                <th className="p-2 text-left">Oxygen</th>
+                <th className="p-2 text-left">Salinity</th>
+                <th className="p-2 text-left">Turbidity</th>
+              </tr>
+            </thead>
+            <tbody>
               {(() => {
                 // Traiter toutes les mesures
                 const allMesures = [...filteredAllMesures, ...realtimeMesures];
@@ -670,8 +670,8 @@ export default function Historique() {
                   </tr>
                 ));
               })()}
-              </tbody>
-            </table>
+            </tbody>
+          </table>
           </div>
           {/* Pagination */}
           {(() => {

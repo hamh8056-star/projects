@@ -63,38 +63,38 @@ export default function Sidebar({ onClose }: SidebarProps) {
           
           {/* Gestion ferme - Admin et Opérateur uniquement */}
           {(isAdmin || isOperateur) && (
-            <li>
-              <Link
-                href="/ferme"
-                onClick={handleLinkClick}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
-                  isActive("/ferme")
-                    ? "bg-white/10 text-white"
-                    : "text-gray-300 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <Database size={20} />
-                <span>Gestion ferme</span>
-              </Link>
-            </li>
+          <li>
+            <Link
+              href="/ferme"
+              onClick={handleLinkClick}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
+                isActive("/ferme")
+                  ? "bg-white/10 text-white"
+                  : "text-gray-300 hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <Database size={20} />
+              <span>Gestion ferme</span>
+            </Link>
+          </li>
           )}
           
           {/* Lots - Admin et Opérateur uniquement */}
           {(isAdmin || isOperateur) && (
-            <li>
-              <Link
-                href="/lots"
-                onClick={handleLinkClick}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
-                  isActive("/lots")
-                    ? "bg-white/10 text-white"
-                    : "text-gray-300 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <FileText size={20} />
-                <span>Lots</span>
-              </Link>
-            </li>
+          <li>
+            <Link
+              href="/lots"
+              onClick={handleLinkClick}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
+                isActive("/lots")
+                  ? "bg-white/10 text-white"
+                  : "text-gray-300 hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <FileText size={20} />
+              <span>Lots</span>
+            </Link>
+          </li>
           )}
           
           {/* Utilisateurs - Admin uniquement */}

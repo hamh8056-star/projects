@@ -1,6 +1,16 @@
-// Réexport des composants UI pour faciliter les imports
-export * from "./card";
-export * from "./select";
-export { default as Loader } from "./Loader";
-export { LoaderIcon } from "./Loader";
+// Export all UI components for easier imports
+export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent } from "./card";
+export { default as Loader, LoaderIcon } from "./Loader";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from "./select";
 

@@ -230,13 +230,13 @@ export default function Alertes() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
+          <input
+            type="text"
                   placeholder="Rechercher une alerte..."
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                />
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
               </div>
             </div>
             
@@ -280,8 +280,8 @@ export default function Alertes() {
             {/* Date fin */}
             <div className="w-full sm:w-[160px]">
               <label className="block text-sm font-medium text-gray-700 mb-2">Date fin</label>
-              <input
-                type="date"
+          <input
+            type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 value={dateFin}
                 onChange={e => setDateFin(e.target.value)}
@@ -317,24 +317,24 @@ export default function Alertes() {
                 onClick={handleExport}
                 className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all"
               >
-                <Download className="w-4 h-4" /> Export CSV
-              </button>
-            </div>
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
+        </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="bg-slate-100">
-                  <th className="p-2 text-left">Date</th>
-                  <th className="p-2 text-left">Type</th>
-                  <th className="p-2 text-left">Bassin</th>
-                  <th className="p-2 text-left">Stade</th>
-                  <th className="p-2 text-left">Message</th>
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-slate-100">
+                <th className="p-2 text-left">Date</th>
+                <th className="p-2 text-left">Type</th>
+                <th className="p-2 text-left">Bassin</th>
+                <th className="p-2 text-left">Stade</th>
+                <th className="p-2 text-left">Message</th>
                   <th className="p-2 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading && (
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading && (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center gap-2">
@@ -343,8 +343,8 @@ export default function Alertes() {
                       </div>
                     </td>
                   </tr>
-                )}
-                {error && (
+              )}
+              {error && (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-red-600">
                       <div className="flex flex-col items-center gap-2">
@@ -353,8 +353,8 @@ export default function Alertes() {
                       </div>
                     </td>
                   </tr>
-                )}
-                {paginatedAlertes.length === 0 && !isLoading && !error && (
+              )}
+              {paginatedAlertes.length === 0 && !isLoading && !error && (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center gap-2">
@@ -364,32 +364,32 @@ export default function Alertes() {
                       </div>
                     </td>
                   </tr>
-                )}
-                {paginatedAlertes.map(a => {
-                  const bassinObj = bassins.find(
-                    (bs: any) =>
-                      bs._id === a.bassin ||
-                      bs._id === a.bassinId ||
-                      bs.nom === a.bassin ||
-                      bs.name === a.bassin
-                  );
-                  return (
+              )}
+              {paginatedAlertes.map(a => {
+                const bassinObj = bassins.find(
+                  (bs: any) =>
+                    bs._id === a.bassin ||
+                    bs._id === a.bassinId ||
+                    bs.nom === a.bassin ||
+                    bs.name === a.bassin
+                );
+                return (
                     <tr key={a._id} className="border-b">
                       <td className="p-2">{a.date ? new Date(a.date).toLocaleString() : ""}</td>
-                      <td className="p-2">
-                        {(() => {
-                          const t = typeMap[a.type] || typeMap.info;
-                          return (
+                    <td className="p-2">
+                      {(() => {
+                        const t = typeMap[a.type] || typeMap.info;
+                        return (
                             <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${t.color}`}>
-                              {t.icon} {t.label}
-                            </span>
-                          );
-                        })()}
-                      </td>
+                            {t.icon} {t.label}
+                          </span>
+                        );
+                      })()}
+                    </td>
                       <td className="p-2">{bassinObj?.nom || bassinObj?.name || a.bassin || a.bassinId || "-"}</td>
                       <td className="p-2">{bassinObj?.stade || '-'}</td>
                       <td className="p-2">{a.message}</td>
-                      <td className="p-2 text-right">
+                    <td className="p-2 text-right">
                         <button 
                           onClick={() => setShowConfirm(a._id)} 
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
@@ -397,12 +397,12 @@ export default function Alertes() {
                           <Trash2 className="w-4 h-4" />
                           Supprimer
                         </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           </div>
           {/* Pagination moderne */}
           {totalPages > 1 && (
@@ -411,20 +411,20 @@ export default function Alertes() {
                 Page <span className="font-medium">{page}</span> sur <span className="font-medium">{totalPages}</span>
               </div>
               <div className="flex items-center gap-2">
-                <button
+              <button
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  onClick={() => setPage(page - 1)}
-                  disabled={page === 1}
-                >
-                  Précédent
-                </button>
-                <button
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                Précédent
+              </button>
+              <button
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  onClick={() => setPage(page + 1)}
-                  disabled={page === totalPages}
-                >
-                  Suivant
-                </button>
+                onClick={() => setPage(page + 1)}
+                disabled={page === totalPages}
+              >
+                Suivant
+              </button>
               </div>
             </div>
           )}

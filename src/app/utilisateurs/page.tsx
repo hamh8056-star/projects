@@ -295,7 +295,7 @@ export default function Utilisateurs() {
                 >
                   <Plus className="w-4 h-4" /> Ajouter un utilisateur
                 </button>
-              </div>
+            </div>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -451,10 +451,10 @@ export default function Utilisateurs() {
                   value={newUser.role} 
                   onChange={e => setNewUser({ ...newUser, role: e.target.value })}
                 >
-                  <option value="admin">Administrateur</option>
-                  <option value="operateur">Opérateur</option>
-                  <option value="observateur">Observateur</option>
-                </select>
+                <option value="admin">Administrateur</option>
+                <option value="operateur">Opérateur</option>
+                <option value="observateur">Observateur</option>
+              </select>
               </div>
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                 <input
@@ -523,10 +523,10 @@ export default function Utilisateurs() {
                   value={editUser.role} 
                   onChange={e => setEditUser({ ...editUser, role: e.target.value })}
                 >
-                  <option value="admin">Administrateur</option>
-                  <option value="operateur">Opérateur</option>
-                  <option value="observateur">Observateur</option>
-                </select>
+                <option value="admin">Administrateur</option>
+                <option value="operateur">Opérateur</option>
+                <option value="observateur">Observateur</option>
+              </select>
               </div>
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                 <input
@@ -634,9 +634,9 @@ function Modal({ children, onClose }: { children: React.ReactNode, onClose: () =
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
         <div className="p-6">
-          {children}
+        {children}
         </div>
       </div>
     </div>
   );
-}
+} 

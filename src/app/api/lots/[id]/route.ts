@@ -168,8 +168,8 @@ export async function PUT(
       { _id: new ObjectId(id) },
       { $set: miseAJour }
     );
-    
-    // Ajouter un événement à l'historique pour le changement de bassin
+      
+      // Ajouter un événement à l'historique pour le changement de bassin
     if (data.bassinId && data.bassinId !== lotExistant.bassinId.toString()) {
       const bassin = await db
         .collection("bassins")
@@ -184,10 +184,10 @@ export async function PUT(
           details: `Transfert du bassin ${lotExistant.bassinNom || "précédent"} vers ${bassin.nom}`
         };
         
-        await db.collection("lots").updateOne(
-          { _id: new ObjectId(id) },
+    await db.collection("lots").updateOne(
+      { _id: new ObjectId(id) },
           { $push: { historique: nouvelHistorique } }
-        );
+    );
       }
     }
     

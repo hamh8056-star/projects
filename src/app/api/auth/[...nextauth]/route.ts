@@ -20,8 +20,8 @@ export const authOptions = {
             return null;
           }
 
-          const client = await clientPromise;
-          const db = client.db();
+        const client = await clientPromise;
+        const db = client.db();
           // Normaliser l'email (trim et lowercase)
           const normalizedEmail = credentials.email.trim().toLowerCase();
           console.log(`[AUTH] 🔍 Recherche utilisateur avec email: "${normalizedEmail}"`);
@@ -80,8 +80,8 @@ export const authOptions = {
 
           console.log(`[AUTH] 🔐 Vérification du mot de passe...`);
 
-          // Vérifier le mot de passe hashé
-          const isValid = await bcrypt.compare(credentials.password, user.password);
+        // Vérifier le mot de passe hashé
+        const isValid = await bcrypt.compare(credentials.password, user.password);
           
           if (!isValid) {
             console.log(`[AUTH] ❌ Mot de passe incorrect pour: ${credentials.email}`);
@@ -93,13 +93,13 @@ export const authOptions = {
 
           console.log(`[AUTH] ✅ Connexion réussie: ${credentials.email} (${user.role})`);
           
-          // Retourner l'utilisateur (sans le mot de passe)
-          return {
-            id: user._id.toString(),
-            name: user.name,
+        // Retourner l'utilisateur (sans le mot de passe)
+        return {
+          id: user._id.toString(),
+          name: user.name,
             email: user.email || normalizedEmail, // Utiliser l'email normalisé si user.email est différent
-            role: user.role || "user"
-          };
+          role: user.role || "user"
+        };
         } catch (error) {
           console.error("[AUTH] ❌ Erreur lors de l'authentification:", error);
           if (error instanceof Error) {

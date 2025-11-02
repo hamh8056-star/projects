@@ -470,7 +470,7 @@ export default function LotsPage() {
               <span className="sr-only">Fermer</span>
               ×
             </button>
-          </div>
+            </div>
         )}
         
         {/* Lots */}
@@ -480,28 +480,28 @@ export default function LotsPage() {
               <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <Fish className="w-6 h-6 text-cyan-600" /> Lots
               </h2>
-              <div className="flex gap-2">
+            <div className="flex gap-2">
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input 
-                    type="text" 
+              <input 
+                type="text" 
                     placeholder="Rechercher un lot..." 
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent w-full"
-                    value={search} 
+                value={search} 
                     onChange={e => {
                       setSearch(e.target.value);
                       setPage(1);
                     }} 
-                  />
+              />
                 </div>
-                <button 
+              <button 
                   className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
-                  onClick={() => setShowAddModal(true)}
-                >
+                onClick={() => setShowAddModal(true)}
+              >
                   <Plus className="w-4 h-4" /> Ajouter un lot
-                </button>
-              </div>
+              </button>
             </div>
+          </div>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
@@ -563,26 +563,26 @@ export default function LotsPage() {
                     <td className="p-2 text-gray-600">{formatDate(lot.dateCreation)}</td>
                     <td className="p-2 text-right">
                       <div className="flex justify-end gap-2">
-                        <button 
+                      <button 
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-lg transition-colors"
-                          onClick={() => loadLotForEdit(lot._id)}
-                          disabled={loadingDetail && selectedLot === lot._id}
-                        >
-                          <Edit className="w-4 h-4" /> Modifier
-                        </button>
-                        <button 
+                        onClick={() => loadLotForEdit(lot._id)}
+                        disabled={loadingDetail && selectedLot === lot._id}
+                      >
+                        <Edit className="w-4 h-4" /> Modifier
+                      </button>
+                      <button 
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition-colors"
-                          onClick={() => generateQRCode(lot._id)}
-                        >
+                        onClick={() => generateQRCode(lot._id)}
+                      >
                           <QrCode className="w-4 h-4" /> QR
-                        </button>
-                        <button 
+                      </button>
+                      <button 
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                          onClick={() => setShowDelete(lot)}
-                          disabled={deletingId === lot._id}
-                        >
+                        onClick={() => setShowDelete(lot)}
+                        disabled={deletingId === lot._id}
+                      >
                           <Trash className="w-4 h-4" /> {deletingId === lot._id ? "..." : "Supprimer"}
-                        </button>
+                      </button>
                       </div>
                     </td>
                   </tr>
@@ -623,8 +623,8 @@ export default function LotsPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="bg-cyan-100 p-3 rounded-full">
-                  <Fish className="w-6 h-6 text-cyan-600" />
-                </div>
+                <Fish className="w-6 h-6 text-cyan-600" />
+              </div>
                 <h2 className="text-xl font-bold text-gray-900">Ajouter un lot</h2>
               </div>
               <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setShowAddModal(false)}>
@@ -761,8 +761,8 @@ export default function LotsPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="bg-cyan-100 p-3 rounded-full">
-                  <QrCode className="w-6 h-6 text-cyan-600" />
-                </div>
+                <QrCode className="w-6 h-6 text-cyan-600" />
+              </div>
                 <h2 className="text-xl font-bold text-gray-900">QR Code du lot</h2>
               </div>
               <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setShowQRModal(false)}>
@@ -810,7 +810,7 @@ export default function LotsPage() {
               <div className="flex items-center gap-3">
                 <div className="bg-red-100 p-3 rounded-full">
                   <AlertCircle className="w-6 h-6 text-red-600" />
-                </div>
+              </div>
                 <h2 className="text-xl font-bold text-gray-900">Confirmer la suppression</h2>
               </div>
               <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setShowDelete(null)}>
@@ -845,8 +845,8 @@ export default function LotsPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="bg-cyan-100 p-3 rounded-full">
-                  <Edit className="w-6 h-6 text-cyan-600" />
-                </div>
+                <Edit className="w-6 h-6 text-cyan-600" />
+              </div>
                 <h2 className="text-xl font-bold text-gray-900">Modifier le lot</h2>
               </div>
               <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setShowEditModal(false)}>
@@ -1004,9 +1004,9 @@ function Modal({ children, onClose }: { children: React.ReactNode, onClose: () =
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
         <div className="p-6">
-          {children}
+        {children}
         </div>
       </div>
     </div>
   );
-}
+} 

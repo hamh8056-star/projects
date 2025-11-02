@@ -1,6 +1,16 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "outputDirectory": ".next"
+  "regions": ["cdg1"],
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
+

@@ -105,7 +105,7 @@ export default function RapportsPage() {
     
     return { filteredMesures, filteredAlertes };
   }
-  
+
   // Export Excel
   async function handleExportExcel(rapport: any) {
     const XLSX = await import("xlsx");
@@ -205,15 +205,15 @@ export default function RapportsPage() {
         m.bassinNom || m.bassin || 'N/A'
       ]);
       
-      autoTable(doc, {
+    autoTable(doc, {
         startY: yPosition,
         head: [["Date", "Température", "pH", "Oxygène", "Bassin"]],
         body: mesuresData,
-        theme: 'grid',
+      theme: 'grid',
         headStyles: { fillColor: [6, 182, 212] },
         styles: { fontSize: 9 },
-        margin: { left: 14, right: 14 }
-      });
+      margin: { left: 14, right: 14 }
+    });
       yPosition = ((doc as any).lastAutoTable?.finalY || yPosition) + 10;
     } else {
       doc.setFontSize(10);
@@ -236,15 +236,15 @@ export default function RapportsPage() {
         a.bassin || 'N/A'
       ]);
       
-      autoTable(doc, {
+    autoTable(doc, {
         startY: yPosition,
         head: [["Date", "Message", "Type", "Bassin"]],
         body: alertesData,
-        theme: 'grid',
-        headStyles: { fillColor: [6, 182, 212] },
+      theme: 'grid',
+      headStyles: { fillColor: [6, 182, 212] },
         styles: { fontSize: 9 },
-        margin: { left: 14, right: 14 }
-      });
+      margin: { left: 14, right: 14 }
+    });
     } else {
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
@@ -310,11 +310,11 @@ export default function RapportsPage() {
                 <AlertCircle className="w-6 h-6" />
               </div>
             </div>
-          </div>
+      </div>
           
           <div className="bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
+            <div>
                 <p className="text-sm font-medium text-gray-600">Performance</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">98.5%</p>
                 <p className="text-sm mt-1 text-green-600">+2.3%</p>
@@ -358,13 +358,13 @@ export default function RapportsPage() {
                     >
                       <BarChart3 className="w-4 h-4" /> Excel
                     </button>
-                    <button 
+            <button
                       className="flex-1 flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                       onClick={() => handleExportPDF(r)}
-                    >
+            >
                       <Download className="w-4 h-4" /> PDF
-                    </button>
-                  </div>
+            </button>
+          </div>
                 </div>
               ))}
             </div>
@@ -399,4 +399,4 @@ export default function RapportsPage() {
       </div>
     </div>
   );
-}
+} 

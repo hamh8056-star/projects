@@ -1,8 +1,0 @@
-# Assurer que les fichiers sont traités correctement
-*.tsx text eol=lf
-*.ts text eol=lf
-*.js text eol=lf
-
-# S'assurer que les fichiers UI ne sont pas ignorés
-src/components/ui/** linguist-vendored=false
-

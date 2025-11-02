@@ -274,7 +274,7 @@ export default function Ferme() {
         {/* Infos ferme modernes */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex-1">
+          <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-3">
                 <Info className="w-5 h-5 text-cyan-600" /> Ma Ferme
               </h2>
@@ -399,15 +399,15 @@ export default function Ferme() {
                           "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors cursor-pointer"
                         }
                       >
-                        {bassin.statut === "actif" ? (
+                      {bassin.statut === "actif" ? (
                           <>
                             <CheckCircle className="w-3 h-3" /> Actif
                           </>
-                        ) : (
+                      ) : (
                           <>
                             <AlertCircle className="w-3 h-3" /> Inactif
                           </>
-                        )}
+                      )}
                       </button>
                     </td>
                     <td className="p-2 text-right">
@@ -527,7 +527,7 @@ export default function Ferme() {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <form onSubmit={handleAddBassin} className="flex flex-col gap-4">
+              <form onSubmit={handleAddBassin} className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-700">Nom</label>
                     <input 
@@ -563,18 +563,18 @@ export default function Ferme() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-700">Stade</label>
-                    <select
+                <select
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                      value={newBassin.stade}
-                      onChange={e => setNewBassin({ ...newBassin, stade: e.target.value })}
-                      required
-                    >
-                      <option value="">Sélectionner le stade</option>
-                      <option value="Bassin des géniteurs">Bassin des géniteurs</option>
-                      <option value="Bassin des larves">Bassin des larves</option>
-                      <option value="Pré-grossissement">Pré-grossissement</option>
-                      <option value="Grossissement">Grossissement</option>
-                    </select>
+                  value={newBassin.stade}
+                  onChange={e => setNewBassin({ ...newBassin, stade: e.target.value })}
+                  required
+                >
+                  <option value="">Sélectionner le stade</option>
+                  <option value="Bassin des géniteurs">Bassin des géniteurs</option>
+                  <option value="Bassin des larves">Bassin des larves</option>
+                  <option value="Pré-grossissement">Pré-grossissement</option>
+                  <option value="Grossissement">Grossissement</option>
+                </select>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                     <input
@@ -595,7 +595,7 @@ export default function Ferme() {
                   >
                     {adding ? "Ajout..." : "Ajouter le bassin"}
                   </button>
-                </form>
+              </form>
               </div>
             </div>
           </div>
@@ -617,7 +617,7 @@ export default function Ferme() {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <form onSubmit={handleEditBassin} className="flex flex-col gap-4">
+              <form onSubmit={handleEditBassin} className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-700">Nom</label>
                     <input 
@@ -653,18 +653,18 @@ export default function Ferme() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-gray-700">Stade</label>
-                    <select
+                <select
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                      value={editBassin.stade}
-                      onChange={e => setEditBassin({ ...editBassin, stade: e.target.value })}
-                      required
-                    >
-                      <option value="">Sélectionner le stade</option>
-                      <option value="Bassin des géniteurs">Bassin des géniteurs</option>
-                      <option value="Bassin des larves">Bassin des larves</option>
-                      <option value="Pré-grossissement">Pré-grossissement</option>
-                      <option value="Grossissement">Grossissement</option>
-                    </select>
+                  value={editBassin.stade}
+                  onChange={e => setEditBassin({ ...editBassin, stade: e.target.value })}
+                  required
+                >
+                  <option value="">Sélectionner le stade</option>
+                  <option value="Bassin des géniteurs">Bassin des géniteurs</option>
+                  <option value="Bassin des larves">Bassin des larves</option>
+                  <option value="Pré-grossissement">Pré-grossissement</option>
+                  <option value="Grossissement">Grossissement</option>
+                </select>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
                     <input
@@ -685,7 +685,7 @@ export default function Ferme() {
                   >
                     {editing ? "Enregistrement..." : "Enregistrer"}
                   </button>
-                </form>
+              </form>
               </div>
             </div>
           </div>
@@ -700,7 +700,7 @@ function Modal({ children, onClose }: { children: React.ReactNode, onClose: () =
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
         <div className="p-6">
-          {children}
+        {children}
         </div>
       </div>
     </div>

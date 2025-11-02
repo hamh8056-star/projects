@@ -180,41 +180,41 @@ export default function Sidebar() {
           {navigation
             .filter((item) => item.roles.includes(userRole))
             .map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
                     group relative flex items-center ${isCollapsed ? 'px-2' : 'px-3'} py-2 text-sm font-medium rounded-lg transition-all duration-200
-                    ${isActive 
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg' 
-                      : 'text-slate-300 hover:bg-slate-700 hover:text-white'
-                    }
+                  ${isActive 
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg' 
+                    : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                  }
                     ${isCollapsed ? 'justify-center' : ''}
-                  `}
-                >
-                  <item.icon 
+                `}
+              >
+                <item.icon 
                     size={18} 
-                    className={`
-                      flex-shrink-0 transition-colors
-                      ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}
-                    `} 
-                  />
-                  {!isCollapsed && (
-                    <div className="ml-3 flex-1">
-                      <span>{item.name}</span>
-                      <p className="text-xs text-slate-400 mt-0.5">{item.description}</p>
-                    </div>
-                  )}
-                  {isCollapsed && (
+                  className={`
+                    flex-shrink-0 transition-colors
+                    ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}
+                  `} 
+                />
+                {!isCollapsed && (
+                  <div className="ml-3 flex-1">
+                    <span>{item.name}</span>
+                    <p className="text-xs text-slate-400 mt-0.5">{item.description}</p>
+                  </div>
+                )}
+                {isCollapsed && (
                     <div className="absolute left-full ml-2 bg-slate-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
-                      {item.name}
-                    </div>
-                  )}
-                </Link>
-              );
-            })}
+                    {item.name}
+                  </div>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* User Profile collé en bas */}
@@ -223,22 +223,22 @@ export default function Sidebar() {
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}`}>
               {!isCollapsed && (
                 <>
-                  <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">
-                      {session.user.name?.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">
-                      {session.user.name}
-                    </p>
-                    <p className="text-xs text-slate-400 truncate">
-                      {session.user.email}
-                    </p>
-                    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${getRoleColor(session.user.role || '')}`}>
-                      {getRoleLabel(session.user.role || '')}
-                    </span>
-                  </div>
+              <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">
+                  {session.user.name?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    {session.user.name}
+                  </p>
+                  <p className="text-xs text-slate-400 truncate">
+                    {session.user.email}
+                  </p>
+                  <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full mt-1 ${getRoleColor(session.user.role || '')}`}>
+                    {getRoleLabel(session.user.role || '')}
+                  </span>
+                </div>
                 </>
               )}
               <button

@@ -75,12 +75,12 @@ export default function Home() {
           
           {/* Header transparent au-dessus du slider */}
           <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'}`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center py-4">
-                {/* Logo à gauche */}
-                <div className="flex items-center space-x-3">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              {/* Logo à gauche */}
+              <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-                    <span className="text-white text-xl font-bold">🐟</span>
+                  <span className="text-white text-xl font-bold">🐟</span>
                   </div>
                   <h1 className={`text-2xl font-bold drop-shadow-lg ${isScrolled ? 'text-gray-900' : 'text-white'}`}>AquaAI</h1>
                 </div>
@@ -106,20 +106,20 @@ export default function Home() {
                     Contact
                   </a>
                 </nav>
-                
+              
                 {/* Bouton de connexion à droite */}
                 <div className="flex items-center justify-end">
-                  <a
-                    href="/auth/signin"
+                <a
+                  href="/auth/signin"
                     className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-                  >
-                    Connexion
-                  </a>
-                </div>
+                >
+                  Connexion
+                </a>
               </div>
             </div>
-          </header>
-          
+          </div>
+        </header>
+
           {/* Content with padding */}
           <div id="accueil" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
           
