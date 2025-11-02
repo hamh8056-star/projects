@@ -7,6 +7,7 @@
     "dev:next": "next dev --turbopack",
     "dev:ws": "node server/ws-server.js",
     "build": "next build",
+    "vercel-build": "npm install --legacy-peer-deps && next build",
     "start": "next start",
     "start:prod": "concurrently \"npm:start\" \"npm:start:ws\"",
     "start:ws": "node server/ws-server.js",
