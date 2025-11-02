@@ -6,7 +6,7 @@
     "dev": "concurrently \"npm:dev:next\" \"npm:dev:ws\"",
     "dev:next": "next dev --turbopack",
     "dev:ws": "node server/ws-server.js",
-    "build": "npm install --legacy-peer-deps && next build",
+    "build": "next build",
     "start": "next start",
     "start:prod": "concurrently \"npm:start\" \"npm:start:ws\"",
     "start:ws": "node server/ws-server.js",
