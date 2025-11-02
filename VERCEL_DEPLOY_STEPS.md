@@ -341,6 +341,14 @@ Votre application est maintenant déployée sur Vercel !
 - Assurez-vous que toutes les variables d'environnement sont définies
 - Vérifiez que `next.config.ts` est correctement configuré
 
+### Erreur de conflit de dépendances (peer dependencies)
+
+**Problème** : `npm error Conflicting peer dependency: mongodb@5.9.2`
+**Solution** :
+- Le fichier `vercel.json` est déjà configuré avec `--legacy-peer-deps`
+- Le fichier `.npmrc` est présent avec `legacy-peer-deps=true`
+- Si l'erreur persiste, vérifiez que `package.json` utilise `mongodb@^5.9.2` (pas la version 6)
+
 ### Erreur 401 lors de la connexion
 
 **Problème** : Authentification échoue

@@ -27,7 +27,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "lucide-react": "^0.517.0",
-    "mongodb": "^6.17.0",
+    "mongodb": "^5.9.2",
     "next": "15.3.4",
     "next-auth": "^4.24.11",
     "qrcode": "^1.5.4",
