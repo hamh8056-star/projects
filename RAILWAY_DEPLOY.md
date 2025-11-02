@@ -127,6 +127,7 @@ Si vous voulez séparer le WebSocket :
 2. **WebSocket** : Assurez-vous que votre URL WebSocket utilise `wss://` (WebSocket Secure) en production
 3. **Base de données** : La base de données MongoDB créée par Railway est automatiquement configurée
 4. **Build** : Le build Next.js se fait automatiquement avec `npm run build`
+5. **ESLint/TypeScript** : La configuration actuelle ignore les erreurs ESLint et TypeScript pendant le build pour permettre le déploiement. Ces erreurs devront être corrigées progressivement.
 
 ## 🔍 Vérification du Déploiement
 

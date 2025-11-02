@@ -51,7 +51,11 @@ export default function Historique() {
   const [dateFin, setDateFin] = useState("");
   const [realtimeMesures, setRealtimeMesures] = useState<any[]>([]);
   const wsToken = process.env.NEXT_PUBLIC_IOT_WS_TOKEN || 'TON_SECRET_TOKEN';
-  const wsUrl = `ws://localhost:4001/?token=${wsToken}`;
+  // Utiliser l'URL WebSocket depuis les variables d'environnement ou localhost par défaut
+  const wsBaseUrl = process.env.NEXT_PUBLIC_WS_URL || (typeof window !== 'undefined' ? 
+    `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.hostname}:4001` : 
+    'ws://localhost:4001');
+  const wsUrl = `${wsBaseUrl}/?token=${wsToken}`;
   const wsRef = useRef<WebSocket | null>(null);
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;

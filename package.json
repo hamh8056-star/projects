@@ -10,7 +10,8 @@
     "start": "next start",
     "start:prod": "concurrently \"npm:start\" \"npm:start:ws\"",
     "start:ws": "node server/ws-server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fix:observateur": "node scripts/fix-observateur-user.js"
   },
   "dependencies": {
     "@next-auth/mongodb-adapter": "^1.1.3",

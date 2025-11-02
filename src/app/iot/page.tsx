@@ -113,7 +113,11 @@ export default function IotPage() {
   // Connexion WebSocket pour mesures temps réel et notifications IoT
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_IOT_WS_TOKEN || 'TON_TOKEN_SECRET';
-    const ws = new WebSocket(`ws://localhost:4001/?token=${token}&type=web`);
+    // Utiliser l'URL WebSocket depuis les variables d'environnement ou localhost par défaut
+    const wsBaseUrl = process.env.NEXT_PUBLIC_WS_URL || (typeof window !== 'undefined' ? 
+      `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.hostname}:4001` : 
+      'ws://localhost:4001');
+    const ws = new WebSocket(`${wsBaseUrl}/?token=${token}&type=web`);
     
     ws.onopen = () => {
       console.log("🔌 WebSocket connecté pour IoT monitoring");

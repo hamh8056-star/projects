@@ -1,4 +1,5 @@
 import clientPromise from "./mongodb";
+import bcrypt from "bcryptjs";
 
 export async function initializeDatabase() {
   try {
@@ -14,21 +15,27 @@ export async function initializeDatabase() {
         {
           name: "Admin Principal",
           email: "admin@aqua.com",
+          password: await bcrypt.hash("admin", 10),
           role: "admin",
+          actif: true,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           name: "Opérateur 1",
           email: "operateur@aqua.com",
+          password: await bcrypt.hash("operateur", 10),
           role: "operateur",
+          actif: true,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           name: "Observateur 1",
           email: "observateur@aqua.com",
+          password: await bcrypt.hash("observateur", 10),
           role: "observateur",
+          actif: true,
           createdAt: new Date(),
           updatedAt: new Date()
         }
