@@ -3,7 +3,8 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Card, Loader } from "@/components/ui";
+import { Card } from "@/components/ui/card";
+import Loader from "@/components/ui/Loader";
 
 export default function SignIn() {
   const { data: session, status } = useSession();

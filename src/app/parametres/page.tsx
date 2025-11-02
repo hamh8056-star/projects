@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, Edit, Database, Lock, RefreshCcw, Settings, SlidersHorizontal } from "lucide-react";
-import { Card } from "@/components/ui";
+import { Card } from "@/components/ui/card";
 
 export default function ParametresPage() {
   // States pour chaque section
