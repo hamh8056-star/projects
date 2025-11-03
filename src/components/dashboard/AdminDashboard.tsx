@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import useSWR, { mutate } from "swr";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect, useRef } from "react";
-import { Users, Shield, Activity, Database, AlertTriangle, CheckCircle, Trash2, Plus, X, Wifi, WifiOff } from "lucide-react";
+import { Users, Shield, Activity, Database, AlertTriangle, CheckCircle, Trash2, Plus, X, Wifi, WifiOff, Edit, Save } from "lucide-react";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json()).then(data => {
   // Si l'API retourne un objet avec une propriété 'mesures', on l'extrait
@@ -491,150 +491,178 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex">
-      <div className="fixed left-0 top-0 h-full w-64 z-40">
-        <Sidebar />
-      </div>
-      <main className="flex-1 w-full p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <main className="w-full">
         {toast && (
-          <div className={`fixed top-6 right-6 z-50 px-4 py-2 rounded shadow-lg text-white ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}>{toast.message}</div>
+          <div className={`fixed top-16 sm:top-20 right-3 sm:right-6 z-50 px-3 sm:px-4 py-2 rounded-lg shadow-lg text-white text-xs sm:text-sm ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}>{toast.message}</div>
         )}
-        <div className="bg-white shadow-sm border-b border-gray-200 px-4 md:px-6 py-4 mb-8 sticky top-0 z-10">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Dashboard Administrateur</h1>
-              <p className="text-gray-600">Gestion complète de la ferme aquacole</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-gray-600">Système opérationnel</span>
+        <div className="bg-white shadow-sm border-b border-gray-200 px-3 sm:px-4 md:px-6 py-3 sm:py-4 mb-4 sm:mb-6 lg:mb-8 sticky top-16 lg:top-0 z-10">
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600" />
+                  <span>Dashboard Administrateur</span>
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">Gestion complète de la ferme aquacole</p>
               </div>
+              {/* Filtre bassin - Mobile friendly */}
+              <div className="w-full sm:w-auto">
+                <select 
+                  value={selectedBassin} 
+                  onChange={(e) => {
+                    console.log('🔄 Changement selectedBassin:', e.target.value);
+                    setSelectedBassin(e.target.value);
+                  }}
+                  className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm"
+                >
+                  {bassinsLoading ? (
+                    <option>Chargement...</option>
+                  ) : bassins.length === 0 ? (
+                    <option>Aucun bassin</option>
+                  ) : (
+                    bassins.map((b: any) => (
+                      <option key={b._id} value={b._id || b.nom || b.name}>
+                        {b.nom || b.name || b._id}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+            </div>
+            
+            {/* Indicateurs de statut - Responsive avec icônes */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 bg-green-50 rounded-lg border border-green-200">
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                <span className="text-gray-700 whitespace-nowrap">Système opérationnel</span>
+              </div>
+              
               {/* Indicateur WebSocket */}
-              <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${wsConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-                <span className="text-sm text-gray-600">
+              <div className={`flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-lg border flex-shrink-0 ${
+                wsConnected ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+              }`}>
+                {wsConnected ? (
+                  <Wifi className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
+                ) : (
+                  <WifiOff className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 flex-shrink-0" />
+                )}
+                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${wsConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                <span className="text-gray-700 whitespace-nowrap hidden sm:inline">
                   {wsConnected ? 'Temps réel actif' : 'Temps réel inactif'}
                 </span>
+                <span className="text-gray-700 sm:hidden">
+                  {wsConnected ? 'Temps réel' : 'Offline'}
+                </span>
               </div>
+              
               {/* Indicateur IoT global */}
               {localIotStatus && (
-                <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full animate-pulse ${
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 bg-blue-50 rounded-lg border border-blue-200 flex-wrap">
+                  <Activity className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
+                  <div className={`w-2 h-2 rounded-full animate-pulse flex-shrink-0 ${
                     localIotStatus.stats?.online > 0 ? 'bg-green-500' : 'bg-red-500'
                   }`}></div>
-                  <span className="text-sm text-gray-600">
-                    IoT: {localIotStatus.stats?.online || 0}/{localIotStatus.stats?.total || 0} connectés
+                  <span className="text-gray-700 whitespace-nowrap">
+                    <span className="hidden sm:inline">IoT: </span>
+                    {localIotStatus.stats?.online || 0}/{localIotStatus.stats?.total || 0}
                   </span>
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-600 font-bold">LIVE</span>
                   <button 
                     onClick={refreshIoTData}
                     disabled={iotUpdating}
-                    className={`ml-2 p-1 transition-colors ${
+                    className={`p-1 transition-colors rounded flex-shrink-0 ${
                       iotUpdating 
                         ? 'text-gray-400 cursor-not-allowed' 
-                        : 'text-gray-500 hover:text-cyan-600'
+                        : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
                     }`}
                     title="Rafraîchir les données IoT"
+                    aria-label="Rafraîchir"
                   >
                     {iotUpdating ? (
-                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
                     )}
                   </button>
-                  {iotUpdating && (
-                    <span className="text-xs text-cyan-600 animate-pulse">Mise à jour...</span>
-                  )}
                   {lastIoTUpdate && (
-                    <span className="text-xs text-gray-500">
-                      Dernière mise à jour: {formatTimeAgo(lastIoTUpdate)}
+                    <span className="text-xs text-gray-500 hidden lg:inline">
+                      {formatTimeAgo(lastIoTUpdate)}
                     </span>
                   )}
                 </div>
               )}
-              <select 
-                value={selectedBassin} 
-                onChange={(e) => {
-                  console.log('🔄 Changement selectedBassin:', e.target.value);
-                  setSelectedBassin(e.target.value);
-                }}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-              >
-                {bassinsLoading ? (
-                  <option>Chargement...</option>
-                ) : bassins.length === 0 ? (
-                  <option>Aucun bassin</option>
-                ) : (
-                  bassins.map((b: any) => (
-                    <option key={b._id} value={b._id || b.nom || b.name}>
-                      {b.nom || b.name || b._id}
-                    </option>
-                  ))
-                )}
-              </select>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8 px-3 sm:px-4 md:px-6 lg:px-8">
           {[
             { 
-              title: "Utilisateurs actifs", 
+              title: "Utilisateurs", 
+              shortTitle: "Users",
               value: utilisateurs.length.toString(), 
-              icon: <Users className="w-6 h-6" />, 
+              icon: Users, 
               trend: `${usersByRole.operateur} opérateurs`, 
               color: "from-blue-500 to-cyan-500",
               status: "normal"
             },
             { 
               title: "Alertes critiques", 
+              shortTitle: "Alertes",
               value: filteredByBassinAlertes.filter((a: any) => a.type === "error").length.toString(), 
-              icon: <AlertTriangle className="w-6 h-6" />, 
+              icon: AlertTriangle, 
               trend: "À traiter", 
               color: "from-red-500 to-pink-500",
               status: "alert"
             },
             { 
               title: "IoT Connectés", 
+              shortTitle: "IoT",
               value: localIotStatus?.stats ? `${localIotStatus.stats.online}/${localIotStatus.stats.total}` : "0/0", 
-              icon: <Wifi className="w-6 h-6" />, 
-              trend: localIotStatus?.stats?.online > 0 ? "Systèmes actifs" : "Aucun IoT connecté", 
+              icon: Wifi, 
+              trend: localIotStatus?.stats?.online > 0 ? "Actifs" : "Offline", 
               color: localIotStatus?.stats?.online > 0 ? "from-green-500 to-emerald-500" : "from-red-500 to-pink-500",
               status: localIotStatus?.stats?.online > 0 ? "normal" : "error"
             },
             { 
               title: "Performance", 
+              shortTitle: "Perf",
               value: "98.5%", 
-              icon: <Activity className="w-6 h-6" />, 
+              icon: Activity, 
               trend: "+2.3%", 
               color: "from-purple-500 to-indigo-500",
               status: "normal"
             }
-          ].map((kpi, index) => (
-            <Card key={index} className="p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
-                  <p className={`text-sm mt-1 ${
-                    kpi.status === 'normal' ? 'text-green-600' : 
-                    kpi.status === 'warning' ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
-                    {kpi.trend}
-                  </p>
+          ].map((kpi, index) => {
+            const IconComponent = kpi.icon;
+            return (
+              <Card key={index} className="p-4 sm:p-5 lg:p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
+                      <span className="sm:hidden">{kpi.shortTitle}</span>
+                      <span className="hidden sm:inline">{kpi.title}</span>
+                    </p>
+                    <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
+                    <p className={`text-xs sm:text-sm mt-1 truncate ${
+                      kpi.status === 'normal' ? 'text-green-600' : 
+                      kpi.status === 'warning' ? 'text-yellow-600' : 'text-red-600'
+                    }`}>
+                      {kpi.trend}
+                    </p>
+                  </div>
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-r ${kpi.color} flex items-center justify-center text-white flex-shrink-0 ml-2`}>
+                    <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
                 </div>
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${kpi.color} flex items-center justify-center text-white`}>
-                  {kpi.icon}
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
 
         {/* Section avancée des bassins d'aquaculture */}
@@ -668,7 +696,7 @@ export default function AdminDashboard() {
               <span className="ml-2 text-gray-600">Chargement des bassins...</span>
             </div>
           ) : bassins && bassins.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-3 sm:px-4 md:px-6 lg:px-8">
               {bassins.filter((b: any) => (b.nom || b.name || '').toLowerCase().includes(userSearch.toLowerCase())).map((bassin: any, index: number) => {
                 // Calcul des stats et statut
                 const bassinMesures = Array.isArray(mesures) ? mesures.filter((m: any) => (m.bassinId || m.bassin) === bassin._id) : [];
@@ -694,42 +722,44 @@ export default function AdminDashboard() {
                 const { connected, device } = getBassinIoTStatus(bassin._id);
                 return (
                   <div key={`${bassin._id || index}-${forceUpdate}-${connected}`} className="relative group flex justify-center">
-                    <div className={`relative rounded-2xl p-10 border-2 border-transparent hover:border-cyan-300 transition-all duration-500 ease-in-out hover:shadow-lg cursor-pointer flex flex-col h-full min-h-[340px] w-full max-w-xl overflow-hidden ${
+                    <div className={`relative rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 xl:p-10 border-2 border-transparent hover:border-cyan-300 transition-all duration-500 ease-in-out hover:shadow-lg cursor-pointer flex flex-col h-full min-h-[280px] sm:min-h-[320px] lg:min-h-[340px] w-full max-w-xl overflow-hidden ${
                       connected ? 'bg-gradient-to-br from-blue-50 to-cyan-50' : 'bg-gradient-to-br from-gray-50 to-slate-100'
                     }`}>
                       {/* Badge statut - masqué si IoT offline */}
                       {connected && (
-                        <div className="absolute top-6 right-6 flex items-center gap-2">
-                          <div className={`w-4 h-4 rounded-full ${statusColor} animate-pulse`}></div>
-                          <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                        <div className="absolute top-3 sm:top-4 lg:top-6 right-3 sm:right-4 lg:right-6 flex items-center gap-1 sm:gap-2">
+                          <div className={`w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 rounded-full ${statusColor} animate-pulse flex-shrink-0`}></div>
+                          <span className={`text-xs font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full whitespace-nowrap ${
                             status === 'normal' ? 'bg-green-100 text-green-800' :
                             status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            {statusIcon} {statusText}
+                            <span className="hidden sm:inline">{statusIcon} </span>{statusText}
                           </span>
                         </div>
                       )}
                       
                       {/* Indicateur IoT */}
-                      <div className="absolute top-6 left-6 flex items-center gap-2">
+                      <div className="absolute top-3 sm:top-4 lg:top-6 left-3 sm:left-4 lg:left-6 flex items-center gap-1 sm:gap-2">
                         {connected ? (
-                          <div className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium animate-pulse transition-all duration-300">
-                            <Wifi className="w-3 h-3" />
-                            <span>IoT Connecté</span>
+                          <div className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium animate-pulse transition-all duration-300">
+                            <Wifi className="w-3 h-3 flex-shrink-0" />
+                            <span className="hidden sm:inline">IoT Connecté</span>
+                            <span className="sm:hidden">IoT</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium transition-all duration-300">
-                            <WifiOff className="w-3 h-3" />
-                            <span>IoT Offline</span>
+                          <div className="flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium transition-all duration-300">
+                            <WifiOff className="w-3 h-3 flex-shrink-0" />
+                            <span className="hidden sm:inline">IoT Offline</span>
+                            <span className="sm:hidden">Offline</span>
                           </div>
                         )}
                       </div>
                       
                       {/* Cercle principal plus grand */}
-                      <div className="flex flex-col items-center mb-4">
-                        {/* SVG cercle 2D pour bassin Aquafresh */}
-                        <svg width="120" height="120" viewBox="0 0 120 120" className="mb-2">
+                      <div className="flex flex-col items-center mb-3 sm:mb-4 mt-8 sm:mt-4">
+                        {/* SVG cercle 2D pour bassin Aquafresh - Responsive */}
+                        <svg width="80" height="80" viewBox="0 0 120 120" className="mb-2 sm:w-24 sm:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32">
                           {/* Berges du bassin */}
                           <circle cx="60" cy="60" r="56" fill="#bcdffb" stroke="#0ea5e9" strokeWidth="8" />
                           {/* Eau avec transition animée */}
@@ -751,42 +781,86 @@ export default function AdminDashboard() {
                           <ellipse cx="60" cy="50" rx="18" ry="3" fill="#fff" fillOpacity="0.10" />
                           <ellipse cx="70" cy="80" rx="10" ry="2" fill="#fff" fillOpacity="0.08" />
                         </svg>
-                        <h4 className="font-bold text-gray-900 text-xl mb-1 truncate max-w-[200px]">
+                        <h4 className="font-bold text-gray-900 text-lg sm:text-xl mb-1 truncate max-w-full px-2 text-center">
                           {bassin.nom || bassin.name || `Bassin ${index + 1}`}
                         </h4>
-                        <span className="text-sm text-gray-500">{bassin.stade || 'En production'}</span>
+                        <span className="text-xs sm:text-sm text-gray-500">{bassin.stade || 'En production'}</span>
                       </div>
-                      {/* Paramètres */}
-                      <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div className="flex items-center gap-2" title="Température de l'eau (18-30°C recommandé)"><span>🌡️</span><span className={`font-semibold ${temperature !== 'N/A' && parseFloat(temperature) > 25 ? 'text-red-600' : temperature !== 'N/A' && parseFloat(temperature) < 20 ? 'text-blue-600' : 'text-gray-900'}`}>{temperature !== 'N/A' ? `${temperature}°C` : 'N/A'}</span></div>
-                        <div className="flex items-center gap-2" title="pH de l'eau (6.5-8.5 recommandé)"><span>🧪</span><span className={`font-semibold ${ph !== 'N/A' && parseFloat(ph) > 8 ? 'text-red-600' : ph !== 'N/A' && parseFloat(ph) < 7 ? 'text-blue-600' : 'text-gray-900'}`}>{ph !== 'N/A' ? ph : 'N/A'}</span></div>
-                        <div className="flex items-center gap-2" title="Oxygène dissous (mg/L)"><span>💧</span><span className={`font-semibold ${oxygen !== 'N/A' && parseFloat(oxygen) < 5 ? 'text-red-600' : oxygen !== 'N/A' && parseFloat(oxygen) < 6 ? 'text-yellow-600' : 'text-gray-900'}`}>{oxygen !== 'N/A' ? `${oxygen} mg/L` : 'N/A'}</span></div>
-                        <div className="flex items-center gap-2" title="Salinité (ppt)"><span>🧂</span><span className="font-semibold text-gray-900">{salinity !== 'N/A' ? salinity : 'N/A'}</span></div>
-                        <div className="flex items-center gap-2" title="Turbidité (NTU)"><span>🌫️</span><span className="font-semibold text-gray-900">{turbidity !== 'N/A' ? turbidity : 'N/A'}</span></div>
+                      
+                      {/* Paramètres avec icônes */}
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                        <div className="flex items-center gap-1.5 sm:gap-2 p-2 bg-white/60 rounded-lg" title="Température">
+                          <span className="text-base sm:text-lg">🌡️</span>
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="text-xs text-gray-500 hidden sm:inline">Temp</span>
+                            <span className={`font-semibold text-xs sm:text-sm truncate ${temperature !== 'N/A' && parseFloat(temperature) > 25 ? 'text-red-600' : temperature !== 'N/A' && parseFloat(temperature) < 20 ? 'text-blue-600' : 'text-gray-900'}`}>
+                              {temperature !== 'N/A' ? `${temperature}°C` : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2 p-2 bg-white/60 rounded-lg" title="pH">
+                          <span className="text-base sm:text-lg">🧪</span>
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="text-xs text-gray-500 hidden sm:inline">pH</span>
+                            <span className={`font-semibold text-xs sm:text-sm truncate ${ph !== 'N/A' && parseFloat(ph) > 8 ? 'text-red-600' : ph !== 'N/A' && parseFloat(ph) < 7 ? 'text-blue-600' : 'text-gray-900'}`}>
+                              {ph !== 'N/A' ? ph : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2 p-2 bg-white/60 rounded-lg" title="Oxygène">
+                          <span className="text-base sm:text-lg">💧</span>
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="text-xs text-gray-500 hidden sm:inline">O₂</span>
+                            <span className={`font-semibold text-xs sm:text-sm truncate ${oxygen !== 'N/A' && parseFloat(oxygen) < 5 ? 'text-red-600' : oxygen !== 'N/A' && parseFloat(oxygen) < 6 ? 'text-yellow-600' : 'text-gray-900'}`}>
+                              {oxygen !== 'N/A' ? `${oxygen}` : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2 p-2 bg-white/60 rounded-lg" title="Salinité">
+                          <span className="text-base sm:text-lg">🧂</span>
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="text-xs text-gray-500 hidden sm:inline">Sal</span>
+                            <span className="font-semibold text-xs sm:text-sm truncate text-gray-900">
+                              {salinity !== 'N/A' ? salinity : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
+                      
                       {/* Dernière mesure */}
-                      <div className="text-xs text-gray-500 mb-2">
-                        Dernière mesure : {derniereMesure ? new Date(derniereMesure.date).toLocaleString() : 'Aucune'}
-                        {!connected && <span className="text-red-600 ml-2">(IoT déconnecté)</span>}
+                      <div className="text-xs text-gray-500 mb-2 px-1">
+                        <span className="hidden sm:inline">Dernière mesure: </span>
+                        <span className="sm:hidden">Dernière: </span>
+                        {derniereMesure ? (
+                          <span className="block sm:inline">
+                            <span className="sm:hidden">{new Date(derniereMesure.date).toLocaleDateString()}</span>
+                            <span className="hidden sm:inline">{new Date(derniereMesure.date).toLocaleString()}</span>
+                          </span>
+                        ) : (
+                          'Aucune'
+                        )}
+                        {!connected && <span className="text-red-600 ml-1">(Offline)</span>}
                         {connected && device && (
-                          <span className="text-green-600 ml-2 animate-pulse">
-                            ✓ Dernière activité: {device.lastSeen ? formatTimeAgo(new Date(device.lastSeen)) : 'Maintenant'}
+                          <span className="text-green-600 ml-1 animate-pulse hidden sm:inline">
+                            ✓ {device.lastSeen ? formatTimeAgo(new Date(device.lastSeen)) : 'Maintenant'}
                           </span>
                         )}
                       </div>
                       <div className="mt-auto w-full">
-                        <div className="flex flex-row flex-nowrap gap-2 w-full justify-center items-center pt-4 border-t border-gray-200 bg-white/60 rounded-b-2xl">
+                        <div className="flex flex-row gap-2 w-full justify-center items-center pt-3 sm:pt-4 border-t border-gray-200 bg-white/60 rounded-b-xl sm:rounded-b-2xl">
                           <button 
                             onClick={() => openBassinDetails(bassin)}
-                            className="flex-1 min-w-[90px] max-w-[140px] flex items-center justify-center gap-1 px-2 py-1 rounded bg-cyan-100 text-cyan-700 hover:bg-cyan-200 text-sm font-medium transition whitespace-nowrap"
+                            className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-lg bg-cyan-100 text-cyan-700 hover:bg-cyan-200 text-xs sm:text-sm font-medium transition whitespace-nowrap"
                           >
-                            <span>🔎</span> Détails
+                            <span className="text-base sm:text-lg">🔎</span>
+                            <span className="hidden sm:inline">Détails</span>
                           </button>
                           <button 
                             onClick={() => openBassinHistory(bassin)}
-                            className="flex-1 min-w-[90px] max-w-[140px] flex items-center justify-center gap-1 px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200 text-sm font-medium transition whitespace-nowrap"
+                            className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs sm:text-sm font-medium transition whitespace-nowrap"
                           >
-                            <span>📈</span> Historique
+                            <span className="text-base sm:text-lg">📈</span>
+                            <span className="hidden sm:inline">Historique</span>
                           </button>
                         </div>
                       </div>
@@ -813,25 +887,32 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Table des 5 dernières mesures complètes */}
-        <Card className="p-6 bg-white shadow-sm mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Database className="w-6 h-6 text-cyan-600" />
-              <h3 className="text-lg font-semibold text-gray-900">5 dernières mesures complètes</h3>
+        <Card className="p-4 sm:p-5 lg:p-6 bg-white shadow-sm mb-4 sm:mb-6 lg:mb-8 mx-3 sm:mx-4 md:mx-6 lg:mx-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Database className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600 flex-shrink-0" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">5 dernières mesures</h3>
             </div>
-            <button className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm" onClick={exportMesuresCSV}>Exporter CSV</button>
+            <button 
+              className="bg-cyan-600 hover:bg-cyan-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-2 w-full sm:w-auto" 
+              onClick={exportMesuresCSV}
+            >
+              <Database className="w-4 h-4" />
+              <span className="hidden sm:inline">Exporter CSV</span>
+              <span className="sm:hidden">Export</span>
+            </button>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="min-w-full text-xs sm:text-sm">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="p-2 text-left">Date</th>
-                  <th className="p-2 text-left">Bassin</th>
-                  <th className="p-2 text-left">Température</th>
-                  <th className="p-2 text-left">pH</th>
-                  <th className="p-2 text-left">Oxygène</th>
-                  <th className="p-2 text-left">Salinité</th>
-                  <th className="p-2 text-left">Turbidité</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">Date</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden sm:table-cell">Bassin</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">🌡️ Temp</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">🧪 pH</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">💧 O₂</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden md:table-cell">🧂 Sal</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden lg:table-cell">🌫️ Turb</th>
                 </tr>
               </thead>
               <tbody>
@@ -841,86 +922,155 @@ export default function AdminDashboard() {
                   const last5 = all
                     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                     .slice(0, 5);
-                  return last5.map((m: any, idx: number) => (
-                    <tr key={idx} className="border-b">
-                      <td className="p-2 whitespace-nowrap">{m.date || m.timestamp || m.createdAt ? new Date(m.date || m.timestamp || m.createdAt).toLocaleString() : '-'}</td>
-                      <td className="p-2 whitespace-nowrap">{m.bassin || m.bassinId || '-'}</td>
-                      <td className="p-2 whitespace-nowrap">{typeof m.temperature !== 'undefined' ? m.temperature : '-'}</td>
-                      <td className="p-2 whitespace-nowrap">{typeof m.ph !== 'undefined' ? m.ph : '-'}</td>
-                      <td className="p-2 whitespace-nowrap">{typeof m.oxygen !== 'undefined' ? m.oxygen : (typeof m.oxygene !== 'undefined' ? m.oxygene : '-')}</td>
-                      <td className="p-2 whitespace-nowrap">{typeof m.salinity !== 'undefined' ? m.salinity : (typeof m.salinite !== 'undefined' ? m.salinite : '-')}</td>
-                      <td className="p-2 whitespace-nowrap">{typeof m.turbidity !== 'undefined' ? m.turbidity : (typeof m.turbidite !== 'undefined' ? m.turbidite : '-')}</td>
-                    </tr>
-                  ));
+                  return last5.map((m: any, idx: number) => {
+                    const bassinName = m.bassin || m.bassinId || '-';
+                    return (
+                      <tr key={idx} className="border-b hover:bg-gray-50">
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap">
+                          <span className="sm:hidden">{m.date || m.timestamp || m.createdAt ? new Date(m.date || m.timestamp || m.createdAt).toLocaleDateString() : '-'}</span>
+                          <span className="hidden sm:inline">{m.date || m.timestamp || m.createdAt ? new Date(m.date || m.timestamp || m.createdAt).toLocaleString() : '-'}</span>
+                        </td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap hidden sm:table-cell">{bassinName}</td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap">
+                          <span className="sm:hidden">{typeof m.temperature !== 'undefined' ? `${m.temperature}°` : '-'}</span>
+                          <span className="hidden sm:inline">{typeof m.temperature !== 'undefined' ? m.temperature : '-'}</span>
+                          <div className="sm:hidden text-xs text-gray-500 mt-0.5">{bassinName}</div>
+                        </td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap">{typeof m.ph !== 'undefined' ? m.ph : '-'}</td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap">{typeof m.oxygen !== 'undefined' ? m.oxygen : (typeof m.oxygene !== 'undefined' ? m.oxygene : '-')}</td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap hidden md:table-cell">{typeof m.salinity !== 'undefined' ? m.salinity : (typeof m.salinite !== 'undefined' ? m.salinite : '-')}</td>
+                        <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap hidden lg:table-cell">{typeof m.turbidity !== 'undefined' ? m.turbidity : (typeof m.turbidite !== 'undefined' ? m.turbidite : '-')}</td>
+                      </tr>
+                    );
+                  });
                 })()}
               </tbody>
             </table>
           </div>
         </Card>
 
-        <Card className="p-6 bg-white shadow-sm mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-            <div className="flex items-center gap-3">
-              <Users className="w-6 h-6 text-blue-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Gestion des utilisateurs (MongoDB)</h3>
+        <Card className="p-4 sm:p-5 lg:p-6 bg-white shadow-sm mb-4 sm:mb-6 lg:mb-8 mx-3 sm:mx-4 md:mx-6 lg:mx-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 flex-shrink-0" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                <span className="hidden sm:inline">Gestion des utilisateurs</span>
+                <span className="sm:hidden">Utilisateurs</span>
+              </h3>
             </div>
-            <div className="flex gap-2">
-              <input type="text" placeholder="Rechercher..." className="border rounded-lg px-3 py-2" value={userSearch} onChange={e => setUserSearch(e.target.value)} />
-              <button className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm" onClick={() => setShowAddUser(true)}><Plus className="w-4 h-4" /> Ajouter</button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <input 
+                type="text" 
+                placeholder="Rechercher..." 
+                className="border rounded-lg px-3 py-2 text-sm w-full sm:w-auto flex-1 sm:flex-none" 
+                value={userSearch} 
+                onChange={e => setUserSearch(e.target.value)} 
+              />
+              <button 
+                className="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm w-full sm:w-auto" 
+                onClick={() => setShowAddUser(true)}
+              >
+                <Plus className="w-4 h-4" /> 
+                <span className="hidden sm:inline">Ajouter</span>
+                <span className="sm:hidden">+ Utilisateur</span>
+              </button>
             </div>
           </div>
-          {usersLoading && <div>Chargement...</div>}
-          {usersError && <div className="text-red-600">Erreur de chargement</div>}
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm">
+          {usersLoading && (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
+              <span className="ml-2 text-gray-600 text-sm">Chargement...</span>
+            </div>
+          )}
+          {usersError && (
+            <div className="text-red-600 text-sm p-4 bg-red-50 rounded-lg border border-red-200">
+              Erreur de chargement
+            </div>
+          )}
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="min-w-full text-xs sm:text-sm">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="p-2 text-left">Nom</th>
-                  <th className="p-2 text-left">Email</th>
-                  <th className="p-2 text-left">Rôle</th>
-                  <th className="p-2 text-left">Actions</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">👤 Nom</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden sm:table-cell">📧 Email</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">🎭 Rôle</th>
+                  <th className="p-2 sm:p-3 text-left whitespace-nowrap">⚙️ Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedUsers.map((user: any) => (
-                  <tr key={user._id} className="border-b">
-                    <td className="p-2">
+                  <tr key={user._id} className="border-b hover:bg-gray-50">
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm">
                       {editUserId === user._id ? (
-                        <input className="border rounded px-2 py-1" value={editUser.name} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />
+                        <input className="border rounded px-2 py-1 text-xs sm:text-sm w-full" value={editUser.name} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />
                       ) : (
-                        user.name || user.nom
+                        <div className="flex flex-col">
+                          <span className="font-medium">{user.name || user.nom}</span>
+                          <span className="text-xs text-gray-500 sm:hidden">{user.email}</span>
+                        </div>
                       )}
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm hidden sm:table-cell">
                       {editUserId === user._id ? (
-                        <input className="border rounded px-2 py-1" value={editUser.email} onChange={e => setEditUser({ ...editUser, email: e.target.value })} />
+                        <input className="border rounded px-2 py-1 text-xs sm:text-sm w-full" value={editUser.email} onChange={e => setEditUser({ ...editUser, email: e.target.value })} />
                       ) : (
                         user.email
                       )}
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 sm:p-3 text-xs sm:text-sm">
                       {editUserId === user._id ? (
-                        <select className="border rounded px-2 py-1" value={editUser.role} onChange={e => setEditUser({ ...editUser, role: e.target.value })}>
-                          <option value="admin">Administrateur</option>
+                        <select className="border rounded px-2 py-1 text-xs sm:text-sm w-full" value={editUser.role} onChange={e => setEditUser({ ...editUser, role: e.target.value })}>
+                          <option value="admin">Admin</option>
                           <option value="operateur">Opérateur</option>
                           <option value="observateur">Observateur</option>
                         </select>
                       ) : (
-                        user.role
+                        <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">{user.role}</span>
                       )}
                     </td>
-                    <td className="p-2 flex gap-2">
+                    <td className="p-2 sm:p-3">
+                      <div className="flex gap-1 sm:gap-2 flex-wrap">
                       {editUserId === user._id ? (
                         <>
-                          <button className="text-green-600" onClick={() => handleSaveUser(user._id)}>Enregistrer</button>
-                          <button className="text-gray-500" onClick={() => setEditUserId(null)}>Annuler</button>
+                          <button 
+                            className="flex items-center gap-1 px-2 py-1 text-green-600 hover:bg-green-50 rounded text-xs sm:text-sm transition-colors" 
+                            onClick={() => handleSaveUser(user._id)}
+                            title="Enregistrer"
+                          >
+                            <Save className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Enregistrer</span>
+                          </button>
+                          <button 
+                            className="flex items-center gap-1 px-2 py-1 text-gray-500 hover:bg-gray-50 rounded text-xs sm:text-sm transition-colors" 
+                            onClick={() => setEditUserId(null)}
+                            title="Annuler"
+                          >
+                            <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Annuler</span>
+                          </button>
                         </>
                       ) : (
                         <>
-                          <button className="text-blue-600" onClick={() => handleEditUser(user._id)}>Éditer</button>
-                          <button className="text-red-600" onClick={() => handleDeleteUser(user._id)} disabled={deletingId === user._id}>{deletingId === user._id ? "Suppression..." : "Supprimer"}</button>
+                          <button 
+                            className="flex items-center gap-1 px-2 py-1 text-blue-600 hover:bg-blue-50 rounded text-xs sm:text-sm transition-colors" 
+                            onClick={() => handleEditUser(user._id)}
+                            title="Éditer"
+                          >
+                            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Éditer</span>
+                          </button>
+                          <button 
+                            className="flex items-center gap-1 px-2 py-1 text-red-600 hover:bg-red-50 rounded text-xs sm:text-sm transition-colors" 
+                            onClick={() => handleDeleteUser(user._id)} 
+                            disabled={deletingId === user._id}
+                            title="Supprimer"
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">{deletingId === user._id ? "Suppression..." : "Supprimer"}</span>
+                          </button>
                         </>
                       )}
+                      </div>
                     </td>
                   </tr>
                 ))}

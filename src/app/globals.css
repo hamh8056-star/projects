@@ -121,16 +121,44 @@
   }
 }
 
+/* Responsive optimizations */
 @media (max-width: 640px) {
-  main, .main-content, .max-w-5xl, .max-w-7xl, .max-w-4xl {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
-    max-width: 100vw !important;
+  /* Ensure proper scrolling on mobile */
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
-  .card, .table, .overflow-x-auto {
-    overflow-x: auto !important;
+  
+  /* Improve table scrolling */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
-  .rounded-xl, .rounded-lg {
-    border-radius: 0.75rem !important;
+  
+  /* Better touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve text readability */
+  p, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Better form inputs */
+  input, select, textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Smooth transitions */
+  * {
+    transition-property: transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
   }
 }

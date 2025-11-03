@@ -155,79 +155,79 @@ export default function Alertes() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-2 sm:p-6 md:p-12">
-      <div className="max-w-7xl mx-auto flex flex-col gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+      <div className="max-w-7xl mx-auto flex flex-col gap-4 sm:gap-5 lg:gap-6">
         {/* Header avec titre et actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
               Alertes
             </h1>
-            <p className="text-gray-600 mt-1">Gestion et suivi des alertes du système</p>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">Gestion et suivi des alertes du système</p>
           </div>
         </div>
         
         {/* Cartes statistiques modernes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          <div className="bg-white shadow-sm p-4 sm:p-5 lg:p-6 rounded-lg hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{nbAlertes}</p>
-                <p className="text-sm mt-1 text-green-600">Toutes alertes</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Total</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{nbAlertes}</p>
+                <p className="text-xs sm:text-sm mt-1 text-green-600 truncate">Toutes alertes</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white">
-                <Bell className="w-6 h-6" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white flex-shrink-0 ml-2">
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
           </div>
           
-          <div className="bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+          <div className="bg-white shadow-sm p-4 sm:p-5 lg:p-6 rounded-lg hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Critiques</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{nbCritiques}</p>
-                <p className="text-sm mt-1 text-red-600">À traiter</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Critiques</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{nbCritiques}</p>
+                <p className="text-xs sm:text-sm mt-1 text-red-600 truncate">À traiter</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-white">
-                <AlertTriangle className="w-6 h-6" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-white flex-shrink-0 ml-2">
+                <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
           </div>
           
-          <div className="bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+          <div className="bg-white shadow-sm p-4 sm:p-5 lg:p-6 rounded-lg hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Avertissements</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{nbAvertissements}</p>
-                <p className="text-sm mt-1 text-yellow-600">Attention</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Avertissements</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{nbAvertissements}</p>
+                <p className="text-xs sm:text-sm mt-1 text-yellow-600 truncate">Attention</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center text-white">
-                <AlertCircle className="w-6 h-6" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center text-white flex-shrink-0 ml-2">
+                <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
           </div>
           
-          <div className="bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition-shadow">
+          <div className="bg-white shadow-sm p-4 sm:p-5 lg:p-6 rounded-lg hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Informations</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{nbInfo}</p>
-                <p className="text-sm mt-1 text-green-600">Suivi</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Informations</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">{nbInfo}</p>
+                <p className="text-xs sm:text-sm mt-1 text-green-600 truncate">Suivi</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white">
-                <CheckCircle className="w-6 h-6" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white flex-shrink-0 ml-2">
+                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Barre de filtres moderne */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="flex flex-wrap gap-4">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-5 lg:p-6">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
             {/* Recherche */}
-            <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
+            <div className="flex-1 min-w-full sm:min-w-[200px]">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Recherche</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -242,7 +242,7 @@ export default function Alertes() {
             
             {/* Type */}
             <div className="w-full sm:w-[180px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Type</label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -255,7 +255,7 @@ export default function Alertes() {
             
             {/* Bassin */}
             <div className="w-full sm:w-[180px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Bassin</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Bassin</label>
               <Select value={bassinFilter} onValueChange={setBassinFilter}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -268,7 +268,7 @@ export default function Alertes() {
             
             {/* Date début */}
             <div className="w-full sm:w-[160px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Date début</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Date début</label>
               <input
                 type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
@@ -279,7 +279,7 @@ export default function Alertes() {
             
             {/* Date fin */}
             <div className="w-full sm:w-[160px]">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Date fin</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Date fin</label>
           <input
             type="date"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
@@ -308,29 +308,32 @@ export default function Alertes() {
         </div>
         {/* Tableau alertes moderne */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Bell className="w-6 h-6 text-cyan-600" /> Alertes
+          <div className="p-4 sm:p-5 lg:p-6 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600" /> 
+                <span>Alertes</span>
               </h2>
               <button 
                 onClick={handleExport}
-                className="flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all"
+                className="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium shadow-md hover:shadow-lg transition-all w-full sm:w-auto"
               >
-            <Download className="w-4 h-4" /> Export CSV
-          </button>
-        </div>
+                <Download className="w-4 h-4" /> 
+                <span className="hidden sm:inline">Export CSV</span>
+                <span className="sm:hidden">Export</span>
+              </button>
+            </div>
           </div>
-          <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+          <table className="min-w-full text-xs sm:text-sm">
             <thead>
               <tr className="bg-slate-100">
-                <th className="p-2 text-left">Date</th>
-                <th className="p-2 text-left">Type</th>
-                <th className="p-2 text-left">Bassin</th>
-                <th className="p-2 text-left">Stade</th>
-                <th className="p-2 text-left">Message</th>
-                  <th className="p-2 text-right">Actions</th>
+                <th className="p-2 sm:p-3 text-left whitespace-nowrap">Date</th>
+                <th className="p-2 sm:p-3 text-left whitespace-nowrap">Type</th>
+                <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden sm:table-cell">Bassin</th>
+                <th className="p-2 sm:p-3 text-left whitespace-nowrap hidden md:table-cell">Stade</th>
+                <th className="p-2 sm:p-3 text-left">Message</th>
+                <th className="p-2 sm:p-3 text-right whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -374,28 +377,40 @@ export default function Alertes() {
                     bs.name === a.bassin
                 );
                 return (
-                    <tr key={a._id} className="border-b">
-                      <td className="p-2">{a.date ? new Date(a.date).toLocaleString() : ""}</td>
-                    <td className="p-2">
+                    <tr key={a._id} className="border-b hover:bg-gray-50">
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm whitespace-nowrap">
+                        <span className="sm:hidden">{a.date ? new Date(a.date).toLocaleDateString() : ""}</span>
+                        <span className="hidden sm:inline">{a.date ? new Date(a.date).toLocaleString() : ""}</span>
+                      </td>
+                    <td className="p-2 sm:p-3">
                       {(() => {
                         const t = typeMap[a.type] || typeMap.info;
                         return (
-                            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${t.color}`}>
-                            {t.icon} {t.label}
+                            <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-medium ${t.color}`}>
+                            <span className="hidden sm:inline">{t.icon}</span>
+                            <span>{t.label}</span>
                           </span>
                         );
                       })()}
                     </td>
-                      <td className="p-2">{bassinObj?.nom || bassinObj?.name || a.bassin || a.bassinId || "-"}</td>
-                      <td className="p-2">{bassinObj?.stade || '-'}</td>
-                      <td className="p-2">{a.message}</td>
-                    <td className="p-2 text-right">
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm hidden sm:table-cell">{bassinObj?.nom || bassinObj?.name || a.bassin || a.bassinId || "-"}</td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm hidden md:table-cell">{bassinObj?.stade || '-'}</td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm max-w-xs truncate sm:max-w-none sm:truncate-0">
+                        <span className="block truncate sm:inline">{a.message}</span>
+                        {bassinObj && (
+                          <span className="block sm:hidden text-xs text-gray-500 mt-1">
+                            Bassin: {bassinObj?.nom || bassinObj?.name || a.bassin || "-"}
+                          </span>
+                        )}
+                      </td>
+                    <td className="p-2 sm:p-3 text-right">
                         <button 
                           onClick={() => setShowConfirm(a._id)} 
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1 px-2 sm:px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          aria-label="Supprimer l'alerte"
                         >
                           <Trash2 className="w-4 h-4" />
-                          Supprimer
+                          <span className="hidden sm:inline">Supprimer</span>
                         </button>
                     </td>
                   </tr>

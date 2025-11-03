@@ -11,6 +11,7 @@
     "start:prod": "concurrently \"npm:start\" \"npm:start:ws\"",
     "start:ws": "node server/ws-server.js",
     "lint": "next lint",
+    "init-db": "node scripts/init-db.js",
     "fix:observateur": "node scripts/fix-observateur-user.js",
     "generate-secrets": "node scripts/generate-secrets.js"
   },

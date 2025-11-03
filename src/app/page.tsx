@@ -75,33 +75,33 @@ export default function Home() {
           
           {/* Header transparent au-dessus du slider */}
           <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-3 sm:py-4">
               {/* Logo à gauche */}
-              <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl font-bold">🐟</span>
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                  <span className="text-white text-lg sm:text-xl font-bold">🐟</span>
                   </div>
-                  <h1 className={`text-2xl font-bold drop-shadow-lg ${isScrolled ? 'text-gray-900' : 'text-white'}`}>AquaAI</h1>
+                  <h1 className={`text-xl sm:text-2xl font-bold drop-shadow-lg ${isScrolled ? 'text-gray-900' : 'text-white'}`}>AquaAI</h1>
                 </div>
                 
                 {/* Menu de navigation au centre */}
-                <nav className="hidden md:flex items-center space-x-8">
+                <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
                   <a
                     href="#accueil"
-                    className={`transition-colors font-medium drop-shadow-md ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
+                    className={`transition-colors font-medium drop-shadow-md text-sm lg:text-base ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
                   >
                     Accueil
                   </a>
                   <a
                     href="#fonctionnalites"
-                    className={`transition-colors font-medium drop-shadow-md ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
+                    className={`transition-colors font-medium drop-shadow-md text-sm lg:text-base ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
                   >
                     Fonctionnalités
                   </a>
                   <a
                     href="#contact"
-                    className={`transition-colors font-medium drop-shadow-md ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
+                    className={`transition-colors font-medium drop-shadow-md text-sm lg:text-base ${isScrolled ? 'text-gray-900 hover:text-cyan-600' : 'text-white hover:text-cyan-200'}`}
                   >
                     Contact
                   </a>
@@ -111,9 +111,10 @@ export default function Home() {
                 <div className="flex items-center justify-end">
                 <a
                   href="/auth/signin"
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 sm:px-5 lg:px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 text-sm sm:text-base"
                 >
-                  Connexion
+                  <span className="hidden sm:inline">Connexion</span>
+                  <span className="sm:hidden">Login</span>
                 </a>
               </div>
             </div>
@@ -121,7 +122,7 @@ export default function Home() {
         </header>
 
           {/* Content with padding */}
-          <div id="accueil" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
+          <div id="accueil" className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-12 sm:py-16 md:py-20 bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
           
           <motion.div 
             className="text-center"

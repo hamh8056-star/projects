@@ -95,18 +95,18 @@ export default function SignIn() {
   if (loading) return <Loader label="Connexion en cours..." />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 flex items-center justify-center p-3 sm:p-4 md:p-6">
       <div className="w-full max-w-md">
         {/* Logo et titre */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white text-2xl">🐟</span>
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <span className="text-white text-xl sm:text-2xl">🐟</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">AquaAI</h1>
-          <p className="text-gray-600">Connectez-vous à votre compte</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">AquaAI</h1>
+          <p className="text-sm sm:text-base text-gray-600">Connectez-vous à votre compte</p>
         </div>
 
-        <Card className="p-8 bg-white/80 backdrop-blur-sm shadow-xl border-0">
+        <Card className="p-5 sm:p-6 md:p-8 bg-white/80 backdrop-blur-sm shadow-xl border-0">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -176,12 +176,12 @@ export default function SignIn() {
                 <button
                   key={index}
                   type="button"
-                  className="w-full flex justify-between items-center px-4 py-3 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                  className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center px-3 sm:px-4 py-3 border border-gray-300 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors"
                   onClick={() => handleFillDemo(demo.email, demo.password)}
                   disabled={isLoading}
                 >
-                  <span>{demo.role}</span>
-                  <span className="text-gray-500">{demo.email}</span>
+                  <span className="font-medium mb-1 sm:mb-0">{demo.role}</span>
+                  <span className="text-gray-500 text-xs sm:text-sm">{demo.email}</span>
                 </button>
               ))}
             </div>

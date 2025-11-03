@@ -4,7 +4,8 @@ const http = require('http');
 require('dotenv').config();
 
 // === CONFIGURATION ===
-const WS_PORT = process.env.WS_PORT || 4001;
+// Railway utilise PORT, mais on peut aussi utiliser WS_PORT
+const WS_PORT = process.env.PORT || process.env.WS_PORT || 4001;
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
 const SECRET_TOKEN = process.env.IOT_WS_TOKEN || 'TON_TOKEN_SECRET';
 
@@ -97,10 +98,13 @@ class WebSocketManager {
     
     this.server.on('connection', this.handleConnection.bind(this));
     
-    server.listen(WS_PORT, () => {
-      console.log(`🚀 WebSocket Server démarré sur ws://localhost:${WS_PORT}`);
+    server.listen(WS_PORT, '0.0.0.0', () => {
+      console.log(`🚀 WebSocket Server démarré sur port ${WS_PORT}`);
       console.log(`🔐 Token de sécurité: ${SECRET_TOKEN.substring(0, 8)}...`);
       console.log(`📡 Prêt à recevoir les données IoT`);
+      if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+        console.log(`🌐 URL publique: wss://${process.env.RAILWAY_PUBLIC_DOMAIN}`);
+      }
     });
 
     // Démarrer le système de heartbeat
