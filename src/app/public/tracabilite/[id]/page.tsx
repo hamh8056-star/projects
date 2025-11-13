@@ -1345,7 +1345,11 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
                     <div>
                       <p className="text-gray-700 font-medium">Vérifier en ligne</p>
                       <p className="text-gray-600 text-sm">
-                        Visitez <span className="text-blue-600">verify.aquaai.com</span> et saisissez l'ID du lot.
+                        Visitez{" "}
+                        <Link href="/public/verify" className="text-blue-600 hover:underline font-medium">
+                          la page de vérification
+                        </Link>{" "}
+                        et saisissez l'ID du lot.
                       </p>
                     </div>
                   </li>
