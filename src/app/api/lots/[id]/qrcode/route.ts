@@ -4,6 +4,26 @@ import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 import QRCode from "qrcode";
+import os from "os";
+
+// Fonction pour obtenir l'IP locale de la machine
+function getLocalIP(): string | null {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    const iface = interfaces[name];
+    if (!iface) continue;
+    
+    for (const alias of iface) {
+      // Ignorer les adresses internes et IPv6
+      // family peut être 'IPv4' ou 4 selon la version de Node.js
+      const isIPv4 = alias.family === 'IPv4' || alias.family === 4;
+      if (isIPv4 && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return null;
+}
 
 // GET /api/lots/[id]/qrcode - Générer un QR code pour un lot
 export async function GET(
@@ -41,7 +61,17 @@ export async function GET(
     }
     
     // Créer l'URL pour la page de traçabilité publique
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.headers.get("origin") || "http://localhost:3000";
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.headers.get("origin") || "http://localhost:3000";
+    
+    // Si on est en développement local (localhost), utiliser l'IP publique pour que le téléphone puisse y accéder
+    if (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")) {
+      // Utiliser l'IP publique configurée ou détecter l'IP locale
+      const publicIP = process.env.NEXT_PUBLIC_IP || "10.188.140.206";
+      // Extraire le port de l'URL originale ou utiliser 3000 par défaut
+      const port = baseUrl.match(/:(\d+)/)?.[1] || "3000";
+      baseUrl = `http://${publicIP}:${port}`;
+    }
+    
     const qrCodeUrl = `${baseUrl}/public/tracabilite/${params.id}`;
     
     // Générer le QR code

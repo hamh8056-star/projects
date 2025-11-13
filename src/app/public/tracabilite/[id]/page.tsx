@@ -213,11 +213,447 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // Télécharger le certificat (fonction simulée)
-  const telechargerCertificat = () => {
-    setToastMessage("Certificat en cours de téléchargement...");
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+  // Télécharger le certificat en PDF
+  const telechargerCertificat = async () => {
+    if (!lot) {
+      setToastMessage("Erreur: Données du certificat non disponibles");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      return;
+    }
+
+    try {
+      setToastMessage("Génération du PDF en cours...");
+      setShowToast(true);
+
+      // Importer dynamiquement les bibliothèques
+      const jsPDF = (await import("jspdf")).default;
+      const QRCode = (await import("qrcode")).default;
+      
+      // Générer le QR code avec l'IP publique
+      // Si on est en localhost, utiliser l'IP publique configurée
+      let qrCodeBaseUrl = window.location.origin;
+      if (qrCodeBaseUrl.includes("localhost") || qrCodeBaseUrl.includes("127.0.0.1")) {
+        const publicIP = process.env.NEXT_PUBLIC_IP || "10.188.140.206";
+        const port = window.location.port || "3000";
+        qrCodeBaseUrl = `http://${publicIP}:${port}`;
+      }
+      const qrCodeUrl = `${qrCodeBaseUrl}/public/tracabilite/${lotId}`;
+      const qrCodeImage = await QRCode.toDataURL(qrCodeUrl, {
+        width: 200,
+        margin: 2,
+        color: {
+          dark: "#000000", // Noir
+          light: "#FFFFFF", // Blanc
+        },
+      });
+      
+      // Créer le PDF directement avec jsPDF (méthode plus fiable)
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 20;
+      let yPosition = margin;
+
+      // Couleurs professionnelles
+      const primaryColor = [0, 0, 0]; // Noir pour un look professionnel
+      const accentColor = [34, 197, 94]; // Vert pour accents
+      const textColor = [31, 41, 55]; // gray-800
+      const borderColor = [200, 200, 200]; // Gris clair pour bordures
+
+      // Créer une image de filigrane d'arrière-plan
+      const createWatermarkImage = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 800; // Haute résolution
+        canvas.height = 800;
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) return null;
+        
+        // Fond transparent
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Rotation pour effet diagonal
+        ctx.save();
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 6); // Rotation de -30 degrés
+        
+        // Texte du filigrane en rouge
+        ctx.fillStyle = 'rgba(220, 38, 38, 0.12)'; // Rouge avec transparence
+        ctx.font = 'bold 120px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Texte principal
+        ctx.fillText('AQUAAI', 0, -50);
+        
+        // Sous-texte
+        ctx.font = 'bold 40px Arial';
+        ctx.fillText('CERTIFICAT', 0, 50);
+        ctx.fillText('OFFICIEL', 0, 100);
+        
+        ctx.restore();
+        
+        return canvas.toDataURL('image/png');
+      };
+
+      const watermarkImage = createWatermarkImage();
+
+      // Fonction pour ajouter le filigrane en arrière-plan
+      const addWatermarkToPage = (pageNum: number) => {
+        if (watermarkImage) {
+          // Positionner le filigrane au centre de la page, en arrière-plan
+          const watermarkSize = 150; // Taille du filigrane
+          const watermarkX = (pageWidth - watermarkSize) / 2;
+          const watermarkY = (pageHeight - watermarkSize) / 2;
+          // Utiliser 'FAST' pour le rendu rapide et placer en arrière-plan
+          pdf.addImage(watermarkImage, 'PNG', watermarkX, watermarkY, watermarkSize, watermarkSize, undefined, 'FAST');
+        }
+      };
+
+      // Ajouter le filigrane sur la première page avant le contenu
+      addWatermarkToPage(1);
+
+      // Bordure décorative autour de la page
+      pdf.setDrawColor(...borderColor);
+      pdf.setLineWidth(1);
+      pdf.rect(5, 5, pageWidth - 10, pageHeight - 10, 'D');
+      pdf.rect(8, 8, pageWidth - 16, pageHeight - 16, 'D');
+
+      // En-tête professionnel
+      const headerY = 25;
+      
+      // Ligne décorative en haut
+      pdf.setDrawColor(...accentColor);
+      pdf.setLineWidth(2);
+      pdf.line(margin, headerY - 5, pageWidth - margin, headerY - 5);
+      
+      // Logo/Titre de l'entreprise (centré)
+      pdf.setTextColor(...primaryColor);
+      pdf.setFontSize(28);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("AQUAAI", pageWidth / 2, headerY, { align: 'center' });
+      
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(100, 100, 100);
+      pdf.text("Laboratoire de Traçabilité Aquacole", pageWidth / 2, headerY + 7, { align: 'center' });
+      pdf.text("Certificat d'Analyse et de Traçabilité", pageWidth / 2, headerY + 12, { align: 'center' });
+      
+      // Ligne décorative en bas de l'en-tête
+      pdf.setDrawColor(...accentColor);
+      pdf.setLineWidth(1);
+      pdf.line(margin, headerY + 18, pageWidth - margin, headerY + 18);
+
+      yPosition = headerY + 30;
+      pdf.setTextColor(...textColor);
+
+      // Section 1: Informations d'identification
+      pdf.setFontSize(12);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...primaryColor);
+      pdf.text("1. INFORMATIONS D'IDENTIFICATION", margin, yPosition);
+      yPosition += 8;
+
+      // Tableau pour les informations
+      pdf.setDrawColor(...borderColor);
+      pdf.setLineWidth(0.3);
+      const tableStartY = yPosition;
+      const col1X = margin;
+      const col2X = margin + 70;
+      const rowHeight = 7;
+
+      const infoData = [
+        { label: "Numéro de certificat:", value: lot._id },
+        { label: "Nom du lot:", value: lot.nom },
+        { label: "Espèce:", value: lot.espece },
+        { label: "Quantité:", value: `${lot.quantite} unités` },
+        { label: "Stade de développement:", value: traduireStade(lot.stade) },
+        { label: "Date de création:", value: formatDate(lot.dateCreation) },
+        { label: "Date de récolte estimée:", value: formatDate(lot.dateRecolteEstimee) || "Non spécifiée" },
+        { label: "Bassin d'élevage:", value: lot.bassinNom || "Non spécifié" },
+      ];
+
+      infoData.forEach((item, index) => {
+        if (yPosition > pageHeight - 100) {
+          pdf.addPage();
+          yPosition = margin + 10;
+        }
+
+        // Ligne du tableau
+        pdf.setDrawColor(...borderColor);
+        pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+        
+        // Label
+        pdf.setFontSize(9);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(60, 60, 60);
+        pdf.text(item.label, col1X, yPosition);
+        
+        // Valeur
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(...textColor);
+        const valueX = col2X;
+        const maxWidth = pageWidth - margin - valueX;
+        const lines = pdf.splitTextToSize(item.value, maxWidth);
+        pdf.text(lines, valueX, yPosition);
+        yPosition += Math.max(rowHeight, lines.length * 4 + 2);
+      });
+
+      // Fermer le tableau
+      pdf.setDrawColor(...borderColor);
+      pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+      yPosition += 5;
+
+      // Section 2: Caractéristiques physiques
+      if (lot.tailleMoyenne || lot.poidsMoyen) {
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(...primaryColor);
+        pdf.text("2. CARACTÉRISTIQUES PHYSIQUES", margin, yPosition);
+        yPosition += 8;
+
+        pdf.setDrawColor(...borderColor);
+        pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+        
+        if (lot.tailleMoyenne) {
+          pdf.setFontSize(9);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(60, 60, 60);
+          pdf.text("Taille moyenne:", col1X, yPosition);
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(...textColor);
+          pdf.text(`${lot.tailleMoyenne} cm`, col2X, yPosition);
+          yPosition += rowHeight;
+        }
+        
+        if (lot.poidsMoyen) {
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(60, 60, 60);
+          pdf.text("Poids moyen:", col1X, yPosition);
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(...textColor);
+          pdf.text(`${lot.poidsMoyen} g`, col2X, yPosition);
+          yPosition += rowHeight;
+        }
+        
+        pdf.setDrawColor(...borderColor);
+        pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+        yPosition += 10;
+      }
+
+      // Section 3: Paramètres environnementaux (si disponibles)
+      if (lot.statistiques) {
+        if (yPosition > pageHeight - 80) {
+          pdf.addPage();
+          yPosition = margin + 10;
+        }
+
+        pdf.setFontSize(12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(...primaryColor);
+        pdf.text("3. PARAMÈTRES ENVIRONNEMENTAUX", margin, yPosition);
+        yPosition += 8;
+
+        // En-tête du tableau
+        pdf.setFillColor(240, 240, 240);
+        pdf.rect(col1X, yPosition - 5, pageWidth - 2 * margin, 6, 'F');
+        pdf.setDrawColor(...borderColor);
+        pdf.rect(col1X, yPosition - 5, pageWidth - 2 * margin, 6, 'D');
+        
+        pdf.setFontSize(8);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(...primaryColor);
+        pdf.text("Paramètre", col1X + 2, yPosition - 1);
+        pdf.text("Minimum", col1X + 50, yPosition - 1);
+        pdf.text("Moyenne", col1X + 75, yPosition - 1);
+        pdf.text("Maximum", col1X + 100, yPosition - 1);
+        pdf.text("Unité", col1X + 130, yPosition - 1);
+        yPosition += 5;
+
+        const stats = [
+          { label: "Température", data: lot.statistiques.temperature, unit: "°C" },
+          { label: "pH", data: lot.statistiques.ph, unit: "" },
+          { label: "Oxygène dissous", data: lot.statistiques.oxygen, unit: "mg/L" },
+          { label: "Salinité", data: lot.statistiques.salinity, unit: "ppt" },
+          { label: "Turbidité", data: lot.statistiques.turbidity, unit: "NTU" },
+        ];
+
+        stats.forEach((stat, index) => {
+          if (stat.data) {
+            if (yPosition > pageHeight - 60) {
+              pdf.addPage();
+              yPosition = margin + 10;
+            }
+
+            // Ligne du tableau
+            pdf.setDrawColor(...borderColor);
+            pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+            
+            pdf.setFontSize(9);
+            pdf.setFont("helvetica", "normal");
+            pdf.setTextColor(...textColor);
+            pdf.text(stat.label, col1X + 2, yPosition);
+            pdf.text(stat.data.min?.toFixed(2) || "N/A", col1X + 50, yPosition);
+            pdf.text(stat.data.moyenne?.toFixed(2) || "N/A", col1X + 75, yPosition);
+            pdf.text(stat.data.max?.toFixed(2) || "N/A", col1X + 100, yPosition);
+            pdf.text(stat.unit, col1X + 130, yPosition);
+            yPosition += 6;
+          }
+        });
+
+        // Fermer le tableau
+        pdf.setDrawColor(...borderColor);
+        pdf.line(col1X, yPosition - 3, pageWidth - margin, yPosition - 3);
+        yPosition += 10;
+      }
+
+      // Section de certification et signature (dernière page)
+      const lastPage = pdf.getNumberOfPages();
+      pdf.setPage(lastPage);
+      
+      // S'assurer qu'on a assez d'espace
+      if (yPosition > pageHeight - 100) {
+        yPosition = pageHeight - 100;
+      }
+
+      // Ligne de séparation
+      pdf.setDrawColor(...borderColor);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 10;
+
+      // Section de certification
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...primaryColor);
+      pdf.text("CERTIFICATION", margin, yPosition);
+      yPosition += 8;
+
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(...textColor);
+      const certText = `Je certifie que les informations contenues dans ce document sont exactes et complètes. Ce certificat atteste de la traçabilité complète du lot depuis sa création jusqu'à sa récolte, conformément aux normes de qualité AquaAI.`;
+      const certLines = pdf.splitTextToSize(certText, pageWidth - 2 * margin);
+      pdf.text(certLines, margin, yPosition);
+      yPosition += certLines.length * 5 + 10;
+
+      // Date de vérification
+      pdf.setFontSize(9);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Date de vérification: ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}`, margin, yPosition);
+      yPosition += 15;
+
+      // Zone de signature
+      const signatureY = yPosition;
+      pdf.setDrawColor(...borderColor);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, signatureY, margin + 60, signatureY);
+      
+      pdf.setFontSize(8);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(...primaryColor);
+      pdf.text("Directeur Technique", margin, signatureY + 8);
+      
+      pdf.setFontSize(7);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(100, 100, 100);
+      pdf.text("AquaAI - Laboratoire de Traçabilité", margin, signatureY + 12);
+
+      // QR Code et Cachet sur toutes les pages
+      for (let i = 1; i <= lastPage; i++) {
+        pdf.setPage(i);
+        
+        // Ajouter le filigrane en arrière-plan sur chaque page
+        addWatermarkToPage(i);
+        
+        // Numéro de page
+        pdf.setFontSize(8);
+        pdf.setTextColor(150, 150, 150);
+        pdf.text(
+          `Page ${i} sur ${lastPage}`,
+          pageWidth / 2,
+          pageHeight - 8,
+          { align: 'center' }
+        );
+
+        // QR Code et Cachet uniquement sur la dernière page
+        if (i === lastPage) {
+          // QR Code (en bas à gauche)
+          const qrX = margin;
+          const qrY = pageHeight - 50;
+          const qrSize = 25;
+          
+          pdf.addImage(qrCodeImage, 'PNG', qrX, qrY, qrSize, qrSize);
+          
+          pdf.setFontSize(6);
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(100, 100, 100);
+          pdf.text("Vérification", qrX + qrSize / 2, qrY + qrSize + 3, { align: 'center' });
+          pdf.text("en ligne", qrX + qrSize / 2, qrY + qrSize + 6, { align: 'center' });
+
+          // Cachet officiel (en bas à droite)
+          const stampX = pageWidth - 40;
+          const stampY = pageHeight - 40;
+          const stampRadius = 18;
+          const redColor = [220, 38, 38]; // Rouge plus foncé pour professionnel
+
+          // Cercle extérieur épais
+          pdf.setDrawColor(...redColor);
+          pdf.setLineWidth(2.5);
+          pdf.circle(stampX, stampY, stampRadius, 'D');
+
+          // Cercle intérieur
+          pdf.setLineWidth(1);
+          pdf.circle(stampX, stampY, stampRadius - 3, 'D');
+
+          // Texte dans le cachet
+          pdf.setTextColor(...redColor);
+          pdf.setFontSize(6);
+          pdf.setFont("helvetica", "bold");
+          pdf.text("CERTIFIÉ", stampX, stampY - 8, { align: 'center' });
+          
+          pdf.setFontSize(11);
+          pdf.setFont("helvetica", "bold");
+          pdf.text("AQUAAI", stampX, stampY, { align: 'center' });
+          
+          pdf.setFontSize(6);
+          pdf.setFont("helvetica", "bold");
+          pdf.text("OFFICIEL", stampX, stampY + 8, { align: 'center' });
+        }
+      }
+
+      // Générer le blob et ouvrir dans un nouvel onglet
+      const pdfBlob = pdf.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      
+      // Ouvrir dans un nouvel onglet
+      const newWindow = window.open(pdfUrl, '_blank');
+      
+      if (!newWindow) {
+        // Si la popup est bloquée, télécharger directement
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `certificat-${lot.nom}-${lot._id}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      
+      // Nettoyer l'URL après un délai
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfUrl);
+      }, 1000);
+
+      setToastMessage("PDF généré avec succès!");
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error: any) {
+      console.error("Erreur lors de la génération du PDF:", error);
+      setToastMessage(`Erreur: ${error.message || "Erreur lors de la génération du PDF"}`);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 5000);
+    }
   };
 
   // Préparer les données pour les graphiques
@@ -391,9 +827,9 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
                 <span className="hidden sm:inline">Copier le lien</span>
               </button>
               <button 
-                onClick={() => window.print()}
+                onClick={telechargerCertificat}
                 className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition flex items-center gap-1"
-                title="Imprimer"
+                title="Imprimer le certificat en PDF"
               >
                 <Download size={18} />
                 <span className="hidden sm:inline">Imprimer</span>
