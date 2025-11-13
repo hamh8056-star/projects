@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { 
   Search, 
   CheckCircle2, 
@@ -13,7 +12,7 @@ import {
   ArrowRight,
   Award
 } from "lucide-react";
-import Link from "next/link";
+import { getPublicUrl } from "@/lib/publicUrl";
 
 interface LotData {
   _id: string;
@@ -34,7 +33,6 @@ export default function VerifyPage() {
   const [loading, setLoading] = useState(false);
   const [lot, setLot] = useState<LotData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,13 +247,15 @@ export default function VerifyPage() {
               {/* Actions */}
               <div className="border-t border-gray-200 pt-6 mt-6">
                 <div className="flex flex-wrap gap-4">
-                  <Link
-                    href={`/public/tracabilite/${lot._id}`}
+                  <a
+                    href={`${getPublicUrl(true)}/public/tracabilite/${lot._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition flex items-center gap-2"
                   >
                     Voir le certificat complet
                     <ArrowRight size={18} />
-                  </Link>
+                  </a>
                   
                   <button
                     onClick={() => {

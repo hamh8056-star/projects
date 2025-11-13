@@ -4,31 +4,12 @@ import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 import QRCode from "qrcode";
-import os from "os";
-
-// Fonction pour obtenir l'IP locale de la machine
-function getLocalIP(): string | null {
-  const interfaces = os.networkInterfaces();
-  for (const name of Object.keys(interfaces)) {
-    const iface = interfaces[name];
-    if (!iface) continue;
-    
-    for (const alias of iface) {
-      // Ignorer les adresses internes et IPv6
-      // family peut être 'IPv4' ou 4 selon la version de Node.js
-      const isIPv4 = alias.family === 'IPv4' || alias.family === 4;
-      if (isIPv4 && !alias.internal) {
-        return alias.address;
-      }
-    }
-  }
-  return null;
-}
+import { getPublicUrlServer } from "@/lib/publicUrl";
 
 // GET /api/lots/[id]/qrcode - Générer un QR code pour un lot
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -40,8 +21,10 @@ export async function GET(
     const client = await clientPromise;
     const db = client.db();
     
+    const { id } = await params;
+    
     // Vérifier si l'ID est valide
-    if (!ObjectId.isValid(params.id)) {
+    if (!ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "ID de lot invalide" },
         { status: 400 }
@@ -51,7 +34,7 @@ export async function GET(
     // Vérifier si le lot existe
     const lot = await db
       .collection("lots")
-      .findOne({ _id: new ObjectId(params.id) });
+      .findOne({ _id: new ObjectId(id) });
     
     if (!lot) {
       return NextResponse.json(
@@ -61,19 +44,10 @@ export async function GET(
     }
     
     // Créer l'URL pour la page de traçabilité publique
-    // Priorité: 1. Variable d'environnement, 2. URL Vercel par défaut, 3. Origin de la requête
-    const defaultPublicUrl = "https://projects-amber-nu.vercel.app";
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
-    
-    // Si on est en développement local (localhost), utiliser l'URL Vercel
-    if (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")) {
-      baseUrl = defaultPublicUrl;
-    }
-    
-    // S'assurer que l'URL ne se termine pas par un slash
-    baseUrl = baseUrl.replace(/\/$/, '');
-    
-    const qrCodeUrl = `${baseUrl}/public/tracabilite/${params.id}`;
+    // Utiliser la fonction utilitaire pour détecter automatiquement l'environnement
+    const origin = req.headers.get("origin");
+    const baseUrl = getPublicUrlServer(origin);
+    const qrCodeUrl = `${baseUrl}/public/tracabilite/${id}`;
     
     // Générer le QR code
     const qrCodeImage = await QRCode.toDataURL(qrCodeUrl, {
@@ -87,7 +61,7 @@ export async function GET(
     
     // Mettre à jour le statut du QR code dans la base de données
     await db.collection("lots").updateOne(
-      { _id: new ObjectId(params.id) },
+      { _id: new ObjectId(id) },
       { $set: { qrCodeGenere: true } }
     );
     

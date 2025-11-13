@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Plus, FileText, Edit, Trash, QrCode, X, Fish, Tag, Loader2, Info, Save, AlertCircle, Search, CheckCircle } from "lucide-react";
+import { getPublicUrl } from "@/lib/publicUrl";
 
 interface Lot {
   _id: string;
@@ -788,7 +789,7 @@ export default function LotsPage() {
                     Télécharger
                   </a>
                   <a
-                    href={qrCodeData.qrCodeUrl}
+                    href={`${getPublicUrl(true)}/public/tracabilite/${selectedLot}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex-1 text-center font-medium"

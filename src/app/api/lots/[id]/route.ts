@@ -7,7 +7,7 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 // GET /api/lots/[id] - Récupérer les détails d'un lot
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +19,7 @@ export async function GET(
     const client = await clientPromise;
     const db = client.db();
     
-    const id = params.id;
+    const { id } = await params;
     
     // Vérifier si l'ID est valide
     if (!ObjectId.isValid(id)) {
@@ -91,7 +91,7 @@ export async function GET(
 // PUT /api/lots/[id] - Mettre à jour un lot
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -104,7 +104,7 @@ export async function PUT(
     const db = client.db();
     const data = await req.json();
     
-    const id = params.id;
+    const { id } = await params;
     
     // Vérifier si l'ID est valide
     if (!ObjectId.isValid(id)) {
@@ -246,7 +246,7 @@ export async function PUT(
 // DELETE /api/lots/[id] - Supprimer un lot
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -255,7 +255,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
     
-    const id = params.id;
+    const { id } = await params;
     
     // Vérifier si l'utilisateur est un administrateur
     if (session.user.role !== "admin") {

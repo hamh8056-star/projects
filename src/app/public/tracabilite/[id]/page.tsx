@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import Image from "next/image";
 import { 
   ArrowLeft, 
@@ -21,6 +21,7 @@ import {
   Share2
 } from "lucide-react";
 import Link from "next/link";
+import { getPublicUrl } from "@/lib/publicUrl";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -81,7 +82,7 @@ interface LotData {
   };
 }
 
-export default function TracabilitePage({ params }: { params: { id: string } }) {
+export default function TracabilitePage({ params }: { params: Promise<{ id: string }> }) {
   const [lot, setLot] = useState<LotData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +91,7 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
   const [mesuresHistoriques, setMesuresHistoriques] = useState<Mesure[]>([]);
   const [loadingMesures, setLoadingMesures] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
-  const lotId = params.id;
+  const { id: lotId } = use(params);
   
   useEffect(() => {
     const fetchLotData = async () => {
@@ -207,7 +208,10 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
 
   // Copier le lien dans le presse-papier
   const copierLien = () => {
-    navigator.clipboard.writeText(window.location.href);
+    // Utiliser l'URL actuelle pour le lien copié (local si local, public si public)
+    const publicUrl = getPublicUrl(true);
+    const urlToCopy = `${publicUrl}/public/tracabilite/${lotId}`;
+    navigator.clipboard.writeText(urlToCopy);
     setToastMessage("Lien copié dans le presse-papier");
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
@@ -231,18 +235,8 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
       const QRCode = (await import("qrcode")).default;
       
       // Générer le QR code avec l'URL publique de l'application
-      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. URL Vercel par défaut
-      const defaultPublicUrl = "https://projects-amber-nu.vercel.app";
-      let qrCodeBaseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
-      
-      // Si on est en développement local (localhost), utiliser l'URL Vercel
-      if (qrCodeBaseUrl.includes("localhost") || qrCodeBaseUrl.includes("127.0.0.1")) {
-        qrCodeBaseUrl = defaultPublicUrl;
-      }
-      
-      // S'assurer que l'URL ne se termine pas par un slash
-      qrCodeBaseUrl = qrCodeBaseUrl.replace(/\/$/, '');
-      
+      // Utiliser la fonction utilitaire pour détecter automatiquement l'environnement
+      const qrCodeBaseUrl = getPublicUrl();
       const qrCodeUrl = `${qrCodeBaseUrl}/public/tracabilite/${lotId}`;
       const qrCodeImage = await QRCode.toDataURL(qrCodeUrl, {
         width: 200,
@@ -842,10 +836,13 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
               <button 
                 onClick={() => {
                   if (navigator.share) {
+                    // Utiliser l'URL actuelle pour le partage (local si local, public si public)
+                    const publicUrl = getPublicUrl(true);
+                    const urlToShare = `${publicUrl}/public/tracabilite/${lotId}`;
                     navigator.share({
                       title: `Traçabilité du lot ${lot.nom}`,
                       text: `Informations de traçabilité pour le lot ${lot.nom} (${lot.espece})`,
-                      url: window.location.href,
+                      url: urlToShare,
                     });
                   } else {
                     copierLien();

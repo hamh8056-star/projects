@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { getPublicUrl } from "@/lib/publicUrl";
 
 interface Lot {
   _id: string;
@@ -493,7 +494,7 @@ export default function LotDetailPage() {
                     Télécharger
                   </a>
                   <a
-                    href={qrCodeData.qrCodeUrl}
+                    href={`${getPublicUrl(true)}/public/tracabilite/${lotId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
