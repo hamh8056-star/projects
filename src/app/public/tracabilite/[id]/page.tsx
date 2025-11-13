@@ -230,14 +230,17 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
       const jsPDF = (await import("jspdf")).default;
       const QRCode = (await import("qrcode")).default;
       
-      // Générer le QR code avec l'IP publique
-      // Si on est en localhost, utiliser l'IP publique configurée
-      let qrCodeBaseUrl = window.location.origin;
+      // Générer le QR code avec l'URL publique de l'application hébergée
+      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. Origin actuel, 3. IP publique locale
+      let qrCodeBaseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      
+      // Si on est en développement local (localhost), utiliser l'IP publique configurée
       if (qrCodeBaseUrl.includes("localhost") || qrCodeBaseUrl.includes("127.0.0.1")) {
         const publicIP = process.env.NEXT_PUBLIC_IP || "10.188.140.206";
         const port = window.location.port || "3000";
         qrCodeBaseUrl = `http://${publicIP}:${port}`;
       }
+      
       const qrCodeUrl = `${qrCodeBaseUrl}/public/tracabilite/${lotId}`;
       const qrCodeImage = await QRCode.toDataURL(qrCodeUrl, {
         width: 200,
