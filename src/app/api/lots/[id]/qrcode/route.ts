@@ -61,16 +61,13 @@ export async function GET(
     }
     
     // Créer l'URL pour la page de traçabilité publique
-    // Priorité: 1. Variable d'environnement, 2. Origin de la requête, 3. URL Vercel par défaut, 4. Localhost
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.headers.get("origin") || "https://projects-amber-nu.vercel.app";
+    // Priorité: 1. Variable d'environnement, 2. IP publique par défaut, 3. Origin de la requête
+    const defaultPublicUrl = "http://10.188.140.206:3000";
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
     
-    // Si on est en développement local (localhost), utiliser l'IP publique pour que le téléphone puisse y accéder
+    // Si on est en développement local (localhost), utiliser l'IP publique
     if (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")) {
-      // Utiliser l'IP publique configurée ou détecter l'IP locale
-      const publicIP = process.env.NEXT_PUBLIC_IP || "10.188.140.206";
-      // Extraire le port de l'URL originale ou utiliser 3000 par défaut
-      const port = baseUrl.match(/:(\d+)/)?.[1] || "3000";
-      baseUrl = `http://${publicIP}:${port}`;
+      baseUrl = defaultPublicUrl;
     }
     
     // S'assurer que l'URL ne se termine pas par un slash

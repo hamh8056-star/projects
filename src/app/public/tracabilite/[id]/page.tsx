@@ -230,15 +230,14 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
       const jsPDF = (await import("jspdf")).default;
       const QRCode = (await import("qrcode")).default;
       
-      // Générer le QR code avec l'URL publique de l'application hébergée
-      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. Origin actuel, 3. URL Vercel par défaut, 4. IP publique locale
-      let qrCodeBaseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin || "https://projects-amber-nu.vercel.app";
+      // Générer le QR code avec l'URL publique de l'application
+      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. IP publique par défaut
+      const defaultPublicUrl = "http://10.188.140.206:3000";
+      let qrCodeBaseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
       
-      // Si on est en développement local (localhost), utiliser l'IP publique configurée
+      // Si on est en développement local (localhost), utiliser l'IP publique
       if (qrCodeBaseUrl.includes("localhost") || qrCodeBaseUrl.includes("127.0.0.1")) {
-        const publicIP = process.env.NEXT_PUBLIC_IP || "10.188.140.206";
-        const port = window.location.port || "3000";
-        qrCodeBaseUrl = `http://${publicIP}:${port}`;
+        qrCodeBaseUrl = defaultPublicUrl;
       }
       
       // S'assurer que l'URL ne se termine pas par un slash
