@@ -61,11 +61,11 @@ export async function GET(
     }
     
     // Créer l'URL pour la page de traçabilité publique
-    // Priorité: 1. Variable d'environnement, 2. IP publique par défaut, 3. Origin de la requête
-    const defaultPublicUrl = "http://10.188.140.206:3000";
+    // Priorité: 1. Variable d'environnement, 2. URL Vercel par défaut, 3. Origin de la requête
+    const defaultPublicUrl = "https://projects-amber-nu.vercel.app";
     let baseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
     
-    // Si on est en développement local (localhost), utiliser l'IP publique
+    // Si on est en développement local (localhost), utiliser l'URL Vercel
     if (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")) {
       baseUrl = defaultPublicUrl;
     }

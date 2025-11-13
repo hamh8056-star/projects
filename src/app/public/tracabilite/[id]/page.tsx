@@ -231,11 +231,11 @@ export default function TracabilitePage({ params }: { params: { id: string } }) 
       const QRCode = (await import("qrcode")).default;
       
       // Générer le QR code avec l'URL publique de l'application
-      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. IP publique par défaut
-      const defaultPublicUrl = "http://10.188.140.206:3000";
+      // Priorité: 1. Variable d'environnement NEXT_PUBLIC_APP_URL, 2. URL Vercel par défaut
+      const defaultPublicUrl = "https://projects-amber-nu.vercel.app";
       let qrCodeBaseUrl = process.env.NEXT_PUBLIC_APP_URL || defaultPublicUrl;
       
-      // Si on est en développement local (localhost), utiliser l'IP publique
+      // Si on est en développement local (localhost), utiliser l'URL Vercel
       if (qrCodeBaseUrl.includes("localhost") || qrCodeBaseUrl.includes("127.0.0.1")) {
         qrCodeBaseUrl = defaultPublicUrl;
       }
