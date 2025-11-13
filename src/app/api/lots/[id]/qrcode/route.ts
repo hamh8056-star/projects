@@ -61,7 +61,8 @@ export async function GET(
     }
     
     // Créer l'URL pour la page de traçabilité publique
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.headers.get("origin") || "http://localhost:3000";
+    // Priorité: 1. Variable d'environnement, 2. Origin de la requête, 3. URL Vercel par défaut, 4. Localhost
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.headers.get("origin") || "https://projects-amber-nu.vercel.app";
     
     // Si on est en développement local (localhost), utiliser l'IP publique pour que le téléphone puisse y accéder
     if (baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")) {
@@ -71,6 +72,9 @@ export async function GET(
       const port = baseUrl.match(/:(\d+)/)?.[1] || "3000";
       baseUrl = `http://${publicIP}:${port}`;
     }
+    
+    // S'assurer que l'URL ne se termine pas par un slash
+    baseUrl = baseUrl.replace(/\/$/, '');
     
     const qrCodeUrl = `${baseUrl}/public/tracabilite/${params.id}`;
     
