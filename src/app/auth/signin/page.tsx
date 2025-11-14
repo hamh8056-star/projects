@@ -49,8 +49,12 @@ export default function SignIn() {
   };
 
   const handleDemoLogin = async (demoEmail: string, demoPassword: string) => {
-    setIsLoading(true);
+    // Remplir les champs visuellement
+    setEmail(demoEmail);
+    setPassword(demoPassword);
     setError("");
+    setIsLoading(true);
+    setLoading(true);
 
     try {
       const result = await signIn("credentials", {
@@ -60,12 +64,14 @@ export default function SignIn() {
       });
 
       if (result?.error) {
-        setError("Erreur de connexion");
+        setError("Identifiants invalides");
       }
+      // Si succès, la redirection se fera automatiquement via useEffect
     } catch (error) {
       setError("Une erreur est survenue");
     } finally {
       setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -172,16 +178,26 @@ export default function SignIn() {
                 { email: "admin@aqua.com", password: "admin", role: "Administrateur" },
                 { email: "operateur@aqua.com", password: "operateur", role: "Opérateur" },
                 { email: "observateur@aqua.com", password: "observateur", role: "Observateur" },
+                { email: "distributeur@aqua.com", password: "distributeur", role: "Distributeur" },
               ].map((demo, index) => (
                 <button
                   key={index}
                   type="button"
-                  className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center px-3 sm:px-4 py-3 border border-gray-300 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors"
-                  onClick={() => handleFillDemo(demo.email, demo.password)}
+                  className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center px-3 sm:px-4 py-3 border border-gray-300 rounded-lg text-xs sm:text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => handleDemoLogin(demo.email, demo.password)}
                   disabled={isLoading}
                 >
-                  <span className="font-medium mb-1 sm:mb-0">{demo.role}</span>
-                  <span className="text-gray-500 text-xs sm:text-sm">{demo.email}</span>
+                  {isLoading ? (
+                    <div className="flex items-center gap-2 w-full justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-500"></div>
+                      <span className="text-gray-600">Connexion en cours...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="font-medium mb-1 sm:mb-0">{demo.role}</span>
+                      <span className="text-gray-500 text-xs sm:text-sm">{demo.email}</span>
+                    </>
+                  )}
                 </button>
               ))}
             </div>

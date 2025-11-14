@@ -17,7 +17,8 @@ import {
   X,
   Activity,
   Database,
-  Shield
+  Shield,
+  Barcode
 } from "lucide-react";
 import Loader, { LoaderIcon } from "@/components/ui/Loader";
 import { useSidebar } from "@/components/contexts/SidebarContext";
@@ -34,6 +35,7 @@ export default function Sidebar() {
   const isAdmin = userRole === "admin";
   const isOperateur = userRole === "operateur";
   const isObservateur = userRole === "observateur";
+  const isDistributeur = userRole === "distributeur";
 
   const navigation = [
     {
@@ -72,6 +74,13 @@ export default function Sidebar() {
       roles: ["admin", "operateur"]
     },
     {
+      name: "Codes-barres",
+      href: "/distributeur",
+      icon: Barcode,
+      description: "Générer codes-barres",
+      roles: ["distributeur", "admin", "operateur"]
+    },
+    {
       name: "Utilisateurs",
       href: "/utilisateurs",
       icon: Users,
@@ -106,6 +115,7 @@ export default function Sidebar() {
       case 'admin': return 'bg-red-100 text-red-800';
       case 'operateur': return 'bg-blue-100 text-blue-800';
       case 'observateur': return 'bg-green-100 text-green-800';
+      case 'distributeur': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -115,6 +125,7 @@ export default function Sidebar() {
       case 'admin': return 'Administrateur';
       case 'operateur': return 'Opérateur';
       case 'observateur': return 'Observateur';
+      case 'distributeur': return 'Distributeur';
       default: return role;
     }
   };

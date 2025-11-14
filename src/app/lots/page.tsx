@@ -32,14 +32,14 @@ interface Bassin {
 export default function LotsPage() {
   const { data: session } = useSession();
   
-  // Protection accès : seuls admin et opérateur peuvent accéder
-  if (session && session.user?.role !== "admin" && session.user?.role !== "operateur") {
+  // Protection accès : seuls admin, opérateur et distributeur peuvent accéder
+  if (session && !["admin", "operateur", "distributeur"].includes(session.user?.role || "")) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Accès restreint</h1>
-          <p className="text-gray-600">Cette page est réservée aux administrateurs et opérateurs.</p>
+          <p className="text-gray-600">Cette page est réservée aux administrateurs, opérateurs et distributeurs.</p>
         </div>
       </div>
     );

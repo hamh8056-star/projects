@@ -62,12 +62,22 @@ async function initializeDatabase() {
           actif: true,
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          name: 'Distributeur 1',
+          email: 'distributeur@aqua.com',
+          password: await bcrypt.hash('distributeur', 10),
+          role: 'distributeur',
+          actif: true,
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ]);
       console.log('✅ Utilisateurs créés:');
       console.log('   - admin@aqua.com / admin (Admin)');
       console.log('   - operateur@aqua.com / operateur (Opérateur)');
       console.log('   - observateur@aqua.com / observateur (Observateur)');
+      console.log('   - distributeur@aqua.com / distributeur (Distributeur)');
     } else {
       console.log(`ℹ️  ${existingUsers} utilisateur(s) existent déjà`);
       
@@ -82,6 +92,8 @@ async function initializeDatabase() {
             defaultPassword = 'operateur';
           } else if (user.email === 'observateur@aqua.com') {
             defaultPassword = 'observateur';
+          } else if (user.email === 'distributeur@aqua.com') {
+            defaultPassword = 'distributeur';
           } else {
             defaultPassword = 'password123';
           }
@@ -166,7 +178,8 @@ async function initializeDatabase() {
     console.log('📋 Comptes disponibles:');
     console.log('   Email: admin@aqua.com | Password: admin');
     console.log('   Email: operateur@aqua.com | Password: operateur');
-    console.log('   Email: observateur@aqua.com | Password: observateur\n');
+    console.log('   Email: observateur@aqua.com | Password: observateur');
+    console.log('   Email: distributeur@aqua.com | Password: distributeur\n');
 
   } catch (error) {
     console.error('❌ Erreur lors de l\'initialisation:', error);

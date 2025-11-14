@@ -35,6 +35,14 @@ async function seedInitialUsers() {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        name: "Distributeur",
+        email: "distributeur@aqua.com",
+        password: await bcrypt.hash("distributeur", 10),
+        role: "distributeur",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ];
     for (const user of users) {
       const exists = await db.collection("users").findOne({ email: user.email });

@@ -41,6 +41,8 @@ export default function DashboardPage() {
       return <AdminDashboard />;
     case "operateur":
       return <AdminDashboard />;
+    case "distributeur":
+      return <AdminDashboard />;
     case "admin":
     default:
       return <AdminDashboard />;

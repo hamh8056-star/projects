@@ -38,6 +38,15 @@ export async function initializeDatabase() {
           actif: true,
           createdAt: new Date(),
           updatedAt: new Date()
+        },
+        {
+          name: "Distributeur 1",
+          email: "distributeur@aqua.com",
+          password: await bcrypt.hash("distributeur", 10),
+          role: "distributeur",
+          actif: true,
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ]);
       console.log("✅ Utilisateurs initialisés");

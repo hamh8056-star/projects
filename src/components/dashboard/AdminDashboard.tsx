@@ -120,7 +120,22 @@ export default function AdminDashboard() {
 
   // Connexion WebSocket pour mesures temps réel
   useEffect(() => {
-    wsRef.current = new WebSocket(wsUrl);
+    // Vérifier si on est côté client
+    if (typeof window === 'undefined') return;
+    
+    // Ne pas se connecter si l'URL WebSocket n'est pas valide
+    if (!wsUrl || (!wsUrl.startsWith('ws://') && !wsUrl.startsWith('wss://'))) {
+      console.warn("⚠️ URL WebSocket invalide, connexion ignorée:", wsUrl);
+      return;
+    }
+    
+    try {
+      wsRef.current = new WebSocket(wsUrl);
+    } catch (error) {
+      console.warn("⚠️ Impossible de créer la connexion WebSocket:", error);
+      return;
+    }
+    
     wsRef.current.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
@@ -280,7 +295,8 @@ export default function AdminDashboard() {
     };
     
     wsRef.current.onerror = (error) => {
-      console.error("❌ Erreur WebSocket AdminDashboard:", error);
+      // L'objet error dans WebSocket est souvent vide, on log juste un avertissement
+      console.warn("⚠️ Erreur WebSocket AdminDashboard - Le serveur WebSocket n'est peut-être pas disponible");
       setWsConnected(false);
     };
     
@@ -289,7 +305,15 @@ export default function AdminDashboard() {
       setWsConnected(false);
     };
     
-    return () => { wsRef.current?.close(); };
+    return () => { 
+      if (wsRef.current) {
+        try {
+          wsRef.current.close();
+        } catch (error) {
+          // Ignorer les erreurs de fermeture
+        }
+      }
+    };
   }, [wsUrl]);
 
   const filteredUsers = utilisateurs.filter((u: any) =>
@@ -1023,6 +1047,7 @@ export default function AdminDashboard() {
                           <option value="admin">Admin</option>
                           <option value="operateur">Opérateur</option>
                           <option value="observateur">Observateur</option>
+                          <option value="distributeur">Distributeur</option>
                         </select>
                       ) : (
                         <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">{user.role}</span>

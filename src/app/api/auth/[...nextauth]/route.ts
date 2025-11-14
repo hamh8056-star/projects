@@ -15,13 +15,21 @@ export const authOptions = {
       },
       async authorize(credentials) {
         try {
+          // Vérifier que NEXTAUTH_SECRET est défini
+          if (!process.env.NEXTAUTH_SECRET) {
+            console.error("[AUTH] ❌ ERREUR CRITIQUE: NEXTAUTH_SECRET n'est pas défini!");
+            throw new Error("NEXTAUTH_SECRET is not configured");
+          }
+
           if (!credentials?.email || !credentials?.password) {
             console.log("[AUTH] ❌ Credentials manquantes");
             return null;
           }
 
-        const client = await clientPromise;
-        const db = client.db();
+          console.log("[AUTH] 🔐 Tentative de connexion pour:", credentials.email);
+
+          const client = await clientPromise;
+          const db = client.db();
           // Normaliser l'email (trim et lowercase)
           const normalizedEmail = credentials.email.trim().toLowerCase();
           console.log(`[AUTH] 🔍 Recherche utilisateur avec email: "${normalizedEmail}"`);
@@ -103,7 +111,16 @@ export const authOptions = {
         } catch (error) {
           console.error("[AUTH] ❌ Erreur lors de l'authentification:", error);
           if (error instanceof Error) {
+            console.error("[AUTH] Message:", error.message);
             console.error("[AUTH] Stack:", error.stack);
+            
+            // Erreurs spécifiques
+            if (error.message.includes("MongoDB") || error.message.includes("connection")) {
+              console.error("[AUTH] ⚠️ Problème de connexion MongoDB. Vérifiez MONGO_URL ou MONGODB_URI");
+            }
+            if (error.message.includes("NEXTAUTH_SECRET")) {
+              console.error("[AUTH] ⚠️ NEXTAUTH_SECRET manquant. Ajoutez-le dans vos variables d'environnement");
+            }
           }
           return null;
         }

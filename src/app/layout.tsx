@@ -85,9 +85,11 @@ function AppHeader() {
                 <a href="/profil" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-cyan-50 text-sm sm:text-base">
                   <User className="w-4 h-4 text-cyan-600" /> Profil
                 </a>
-                <a href="/parametres" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-cyan-50 text-sm sm:text-base">
-                  <Settings className="w-4 h-4 text-cyan-600" /> Paramètres
-                </a>
+                {session?.user?.role === "admin" && (
+                  <a href="/parametres" className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-cyan-50 text-sm sm:text-base">
+                    <Settings className="w-4 h-4 text-cyan-600" /> Paramètres
+                  </a>
+                )}
                 <div className="my-2 border-t border-gray-100" />
                 <button
                   className="flex items-center gap-2 w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 text-sm sm:text-base"

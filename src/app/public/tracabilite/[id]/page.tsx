@@ -96,17 +96,26 @@ export default function TracabilitePage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     const fetchLotData = async () => {
       try {
+        console.log(`[Tracabilité] Chargement du lot: ${lotId}`);
+        
         // Utiliser la nouvelle API publique
         const response = await fetch(`/api/lots/public/${lotId}`);
         
+        console.log(`[Tracabilité] Réponse API:`, response.status, response.statusText);
+        
         if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error(`[Tracabilité] Erreur API:`, errorData);
+          
           if (response.status === 404) {
-            throw new Error("Lot non trouvé");
+            throw new Error("Lot non trouvé. Vérifiez que l'ID du lot est correct.");
           }
-          throw new Error("Erreur lors du chargement des données");
+          throw new Error(errorData.error || "Erreur lors du chargement des données");
         }
         
         const data = await response.json();
+        console.log(`[Tracabilité] Données reçues:`, data);
+        
         setLot(data);
         setLoading(false);
         
@@ -115,12 +124,18 @@ export default function TracabilitePage({ params }: { params: Promise<{ id: stri
           fetchMesuresHistoriques(data.bassinId);
         }
       } catch (err: any) {
+        console.error(`[Tracabilité] Erreur:`, err);
         setError(err.message || "Une erreur est survenue");
         setLoading(false);
       }
     };
     
-    fetchLotData();
+    if (lotId) {
+      fetchLotData();
+    } else {
+      setError("ID de lot manquant dans l'URL");
+      setLoading(false);
+    }
   }, [lotId]);
   
   // Charger l'historique des mesures pour un bassin

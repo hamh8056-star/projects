@@ -90,10 +90,12 @@ export default function ObservateurSidebar() {
             <FileText className="w-4 h-4" />
             Guides
           </a>
-          <a href="/parametres" className="flex items-center gap-3 hover:bg-blue-600/50 rounded-lg px-3 py-2 transition-colors">
-            <Settings className="w-4 h-4" />
-            Paramètres
-          </a>
+          {session?.user?.role === "admin" && (
+            <a href="/parametres" className="flex items-center gap-3 hover:bg-blue-600/50 rounded-lg px-3 py-2 transition-colors">
+              <Settings className="w-4 h-4" />
+              Paramètres
+            </a>
+          )}
         </div>
       </nav>
       
