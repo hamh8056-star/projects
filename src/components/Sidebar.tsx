@@ -79,21 +79,21 @@ export default function Sidebar() {
       href: "/distributeur",
       icon: QrCode,
       description: "Générer QR codes",
-      roles: ["distributeur", "admin", "operateur"]
+      roles: ["distributeur"]
     },
     {
       name: "Ventes",
       href: "/ventes",
       icon: ShoppingCart,
       description: "Gérer les ventes",
-      roles: ["distributeur", "admin", "operateur"]
+      roles: ["distributeur"]
     },
     {
       name: "Clients",
       href: "/clients",
       icon: Users,
       description: "Gérer les clients",
-      roles: ["distributeur", "admin", "operateur"]
+      roles: ["distributeur"]
     },
     {
       name: "Utilisateurs",

@@ -17,9 +17,9 @@ export async function GET(
     }
 
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }
@@ -73,9 +73,9 @@ export async function PUT(
     }
 
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }
@@ -168,9 +168,9 @@ export async function DELETE(
     }
 
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }

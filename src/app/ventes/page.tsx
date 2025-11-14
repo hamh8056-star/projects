@@ -98,8 +98,8 @@ export default function VentesPage() {
   const [venteToDelete, setVenteToDelete] = useState<Vente | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // Protection accès
-  if (session && !["distributeur", "admin", "operateur"].includes(session.user?.role || "")) {
+  // Protection accès : seuls les distributeurs peuvent accéder
+  if (session && session.user?.role !== "distributeur") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

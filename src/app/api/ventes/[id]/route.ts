@@ -17,9 +17,9 @@ export async function GET(
     }
 
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé aux distributeurs, administrateurs et opérateurs" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }

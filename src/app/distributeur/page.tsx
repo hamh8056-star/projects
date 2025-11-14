@@ -43,8 +43,8 @@ export default function DistributeurPage() {
   const [generating, setGenerating] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  // Protection accès : seuls distributeur, admin et opérateur peuvent accéder
-  if (session && !["distributeur", "admin", "operateur"].includes(session.user?.role || "")) {
+  // Protection accès : seuls les distributeurs peuvent accéder
+  if (session && session.user?.role !== "distributeur") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

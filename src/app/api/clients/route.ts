@@ -13,11 +13,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    // Seuls les distributeurs, admins et opérateurs peuvent voir les clients
+    // Seuls les distributeurs peuvent voir les clients
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé aux distributeurs, administrateurs et opérateurs" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }
@@ -55,11 +55,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
-    // Seuls les distributeurs, admins et opérateurs peuvent créer des clients
+    // Seuls les distributeurs peuvent créer des clients
     const userRole = session.user?.role;
-    if (!["distributeur", "admin", "operateur"].includes(userRole || "")) {
+    if (userRole !== "distributeur") {
       return NextResponse.json(
-        { error: "Accès réservé aux distributeurs, administrateurs et opérateurs" },
+        { error: "Accès réservé aux distributeurs" },
         { status: 403 }
       );
     }
