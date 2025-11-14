@@ -17,11 +17,11 @@ export async function GET(
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
     
-    // Seuls les distributeurs peuvent générer des QR codes
+    // Les distributeurs et les administrateurs peuvent générer des QR codes
     const userRole = session.user?.role;
-    if (userRole !== "distributeur") {
+    if (userRole !== "distributeur" && userRole !== "admin") {
       return NextResponse.json(
-        { error: "Accès réservé aux distributeurs" },
+        { error: "Accès réservé aux distributeurs et administrateurs" },
         { status: 403 }
       );
     }
