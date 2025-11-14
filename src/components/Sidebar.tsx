@@ -18,7 +18,8 @@ import {
   Activity,
   Database,
   Shield,
-  Barcode
+  QrCode,
+  ShoppingCart
 } from "lucide-react";
 import Loader, { LoaderIcon } from "@/components/ui/Loader";
 import { useSidebar } from "@/components/contexts/SidebarContext";
@@ -43,7 +44,7 @@ export default function Sidebar() {
       href: "/dashboard",
       icon: LayoutDashboard,
       description: "Vue d'ensemble",
-      roles: ["admin", "operateur", "observateur"]
+      roles: ["admin", "operateur", "observateur", "distributeur"]
     },
     {
       name: "Historique",
@@ -74,10 +75,24 @@ export default function Sidebar() {
       roles: ["admin", "operateur"]
     },
     {
-      name: "Codes-barres",
+      name: "QR Code",
       href: "/distributeur",
-      icon: Barcode,
-      description: "Générer codes-barres",
+      icon: QrCode,
+      description: "Générer QR codes",
+      roles: ["distributeur", "admin", "operateur"]
+    },
+    {
+      name: "Ventes",
+      href: "/ventes",
+      icon: ShoppingCart,
+      description: "Gérer les ventes",
+      roles: ["distributeur", "admin", "operateur"]
+    },
+    {
+      name: "Clients",
+      href: "/clients",
+      icon: Users,
+      description: "Gérer les clients",
       roles: ["distributeur", "admin", "operateur"]
     },
     {
